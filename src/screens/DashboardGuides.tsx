@@ -16,7 +16,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   DashboardGuides: undefined;
-  CityDetails: { city: string };
+  SearchScreen: undefined;
+  CityDetailsScreen: { city: string };
 };
 
 type DashboardGuidesNavigationProp = NativeStackNavigationProp<
@@ -52,17 +53,17 @@ const DashboardGuides = () => {
         />
 
         <View style={styles.container}>
-          <View style={styles.searchBar}>
-            <TextInput
-              placeholder="Search location to find a guide"
-              style={styles.searchInput}
-            />
+          <TouchableOpacity
+            style={styles.searchBar}
+            onPress={() => navigation.navigate('SearchScreen')}
+          >
+            <Text style={styles.searchInput}>Search location to find a guide</Text>
             <Image
               source={require('../assets/images/search_icon.png')}
               style={styles.searchImage}
               resizeMode="contain"
             />
-          </View>
+          </TouchableOpacity>
 
           <FlatList
             data={places}
@@ -73,7 +74,7 @@ const DashboardGuides = () => {
               <TouchableOpacity
                 style={styles.placeItem}
                 onPress={() =>
-                  navigation.navigate('CityDetails', { city: item.name })
+                  navigation.navigate('CityDetailsScreen', { city: item.name })
                 }
               >
                 <Image source={item.image} style={styles.placeImage} />
@@ -100,7 +101,7 @@ const DashboardGuides = () => {
             style={styles.footerIcon2}
             resizeMode="contain"
           />
-          <Text>Profile</Text>
+          <Text>My Plans</Text>
         </View>
         <View style={styles.footerItem}>
           <Image
@@ -117,78 +118,86 @@ const DashboardGuides = () => {
 
 export default DashboardGuides;
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#E0F2FE' },
-  topImage: { width: '100%', height: 180 },
-  container: {
-    flex: 1,
-    backgroundColor: '#E0F2FE',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    paddingHorizontal: 16,
+const styles = StyleSheet.create({ 
+  safe: { 
+    flex: 1, 
+    backgroundColor: '#E0F2FE' 
+  }, 
+  topImage: { 
+    width: '100%', 
+    height: 180 
+  }, 
+  container: { 
+    flex: 1, 
+    backgroundColor: '#E0F2FE', 
+    borderTopLeftRadius: 10, 
+    borderTopRightRadius: 10, 
+    paddingHorizontal: 16, 
     marginTop: -24, // overlap top image
-    paddingTop: 24,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#C3E2F1',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    marginBottom: 16,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: 'Karma-Bold',
-    fontWeight: '700',
-    marginRight: 8,
-  },
-  searchImage: {
-  width: 19,
-  height: 19,
-},
-  placeItem: {
-    alignItems: 'center',
-    marginBottom: 16,
-    flex: 1 / 3,
-  },
-  placeImage: {
-    width: 79,
-    height: 79,
-    borderRadius: 39.5,
-    marginBottom: 8,
-  },
-  placeName: {
-    fontSize: 10,
-    fontFamily: 'Karma-Regular',
-    textAlign: 'center',
-  },
-  footer: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    borderColor: '#0C1559',
-    paddingVertical: 10,
-    justifyContent: 'space-around',
-    backgroundColor: '#C3E2F1',
-  },
-  footerItem: {
-    alignItems: 'center',
-  },
-   footerIcon1: {   
-    width: 21,
-    height: 37,
-    marginBottom: 4,
-  },
-  footerIcon2: {   
-    width: 40,
-    height: 40,
-    marginBottom: 4,
-  },
-  footerIcon3: {   
-    width: 41,
-    height: 41,
-    marginBottom: 4,
-  },
+    paddingTop: 24, 
+  }, 
+  searchBar: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#C3E2F1', 
+    borderRadius: 10, 
+    paddingHorizontal: 10, 
+    paddingVertical: 10, 
+    marginBottom: 16, 
+    width: 375,
+    height: 43,
+  }, 
+  searchInput: { 
+    flex: 1, 
+    fontSize: 16, 
+    fontFamily: 'Karma-Bold', 
+    fontWeight: '700', 
+    marginRight: 8, 
+  }, 
+  searchImage: { 
+    width: 19, 
+    height: 19, 
+  }, 
+  placeItem: { 
+    alignItems: 'center', 
+    marginBottom: 16, 
+    flex: 1 / 3, 
+  }, 
+  placeImage: { 
+    width: 79, 
+    height: 79, 
+    borderRadius: 39.5, 
+    marginBottom: 8, 
+  }, 
+  placeName: { 
+    fontSize: 10, 
+    fontFamily: 'Karma-Regular', 
+    textAlign: 'center', 
+  }, 
+  footer: { 
+    flexDirection: 'row', 
+    borderTopWidth: 1, 
+    borderColor: '#0C1559', 
+    paddingVertical: 10, 
+    justifyContent: 'space-around', 
+    backgroundColor: '#C3E2F1', 
+  }, 
+  footerItem: { 
+    alignItems: 'center', 
+  }, 
+  footerIcon1: { 
+    width: 21, 
+    height: 37, 
+    marginBottom: 4, 
+  }, 
+  footerIcon2: { 
+    width: 40, 
+    height: 40, 
+    marginBottom: 4, 
+  }, 
+  footerIcon3: { 
+    width: 41, 
+    height: 41, 
+    marginBottom: 4, 
+  }, 
 });

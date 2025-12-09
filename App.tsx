@@ -6,12 +6,26 @@ import SplashScreen from './src/screens/SplashScreen';
 import OnboardingScreen_1 from './src/screens/OnboardingScreen_1';
 import OnboardingScreen_2 from './src/screens/OnboardingScreen_2';
 import DashboardGuides from './src/screens/DashboardGuides';
+import SearchScreen from './src/screens/SearchScreen';
+import CityDetailsScreen from './src/screens/CityDetailsScreen';
+import LandmarkDetailsScreen from './src/screens/LandmarkDetailsScreen';
 
 export type RootStackParamList = {
   Splash: undefined;
   Onboarding1: undefined;
   Onboarding2: undefined;
   DashboardGuides: undefined;
+  SearchScreen: undefined;
+  CityDetailsScreen: { city: string };
+  
+  LandmarkDetailsScreen: { 
+        placeName: string; 
+        placeCategories: { name: string }[]; 
+        placeAddress: string;
+        lat: number; 
+        lon: number;
+  }
+  
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,6 +43,9 @@ export default function App() {
 
         {/* Main app screen */}
         <Stack.Screen name="DashboardGuides" component={DashboardGuides} />
+        <Stack.Screen name="SearchScreen" component={SearchScreen} />
+        <Stack.Screen name="CityDetailsScreen" component={CityDetailsScreen} />
+        <Stack.Screen name="LandmarkDetailsScreen" component={LandmarkDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OSM Leaflet Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        /* Map container must take up the whole view of the WebView */
+        #mapid { width: 100vw; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div id="mapid"></div>
+    
+    <script>
+        let defaultLat = 0;
+        let defaultLon = 0;
+        
+        // --- 1. Initialize Map ---
+        const map = L.map('mapid', {
+        zoomControl: true, 
+        attributionControl: false 
+    }).setView([defaultLat, defaultLon], 1);
+
+        // --- 2. Add OpenStreetMap Tiles ---
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+        let marker = null;
+        
+        // --- 3. Receive Data from React Native (CRUCIAL SECTION) ---
+document.addEventListener('message', event => {
+    try {
+        const data = JSON.parse(event.data);
+        const lat = data.lat; 
+        const lon = data.lon; 
+        const name = data.name;
+
+        console.log('Received coordinates:', lat, lon);
+
+        // Ensure coordinates are valid numbers before proceeding
+        if (typeof lat !== 'number' || typeof lon !== 'number') {
+            console.error("Invalid coordinates received from React Native.");
+            return;
+        }
+
+        // Remove existing marker if it exists
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        
+        //Add invalidateSize() before setting the view This forces Leaflet to check its container size, preventing it from being stuck.
+        map.invalidateSize(); 
+
+        //Set the map center to the *received* coordinates and zoom in
+        map.setView([lat, lon], 16); 
+        
+        // Add a new marker at the *received* coordinates
+        marker = L.marker([lat, lon]).addTo(map)
+            .bindPopup('<b>' + name + '</b>')
+            .openPopup();
+            
+    } catch (e) {
+        console.error("Error parsing message from React Native:", e);
+    }
+});
+
+// Add a resize listener as a fallback This helps if the WebView's size changes dynamically.
+window.onresize = function(event) {
+    map.invalidateSize();
+};
+// --- 4. Send Ready Signal to React Native ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if RN is listening and send a 'ready' signal
+    if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'mapReady' }));
+    }
+});
+</script>
+</body>
+</html>
