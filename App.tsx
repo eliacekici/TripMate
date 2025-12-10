@@ -21,9 +21,9 @@ export type RootStackParamList = {
   LandmarkDetailsScreen: { 
         placeName: string; 
         placeCategories: { name: string }[]; 
-        placeAddress: string;
         lat: number; 
         lon: number;
+        distanceDetail: string;
   }
   
 };

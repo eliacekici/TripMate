@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'LandmarkDetailsScreen'>
 
 const LandmarkDetailsScreen = ({ route }: Props) => {
     // Destructure lat and lon directly from route.params
-    const { placeName, placeCategories, placeAddress, lat, lon } = route.params;
+    const { placeName, placeCategories, lat, lon, distanceDetail } = route.params;
     
     const webViewRef = useRef<WebViewType | null>(null);
 
@@ -40,35 +40,31 @@ const LandmarkDetailsScreen = ({ route }: Props) => {
             <View style={styles.mapContainer}>
                 <WebView
                     ref={webViewRef}
-                    style={styles.map}
                     source={require('../assets/map.html')}
-                    
-                    onMessage={onMapMessage} 
-                    
+                    style={styles.map}
                     javaScriptEnabled={true}
                     domStorageEnabled={true}
+                    onMessage={onMapMessage}
                 />
             </View>
-            {/* ---------------------------------- */}
-
+            
             <View style={styles.detailsContent}>
                 <Text style={styles.title}>{placeName}</Text>
                 
+                {/* Detail Card 1: Category */}
                 <View style={styles.detailCard}>
                     <Text style={styles.label}>Category</Text>
                     <Text style={styles.value}>
                         {placeCategories.map(c => c.name).join(', ') || 'General Interest'}
                     </Text>
                 </View>
-
+                
+                {/* distanceDetail */}
                 <View style={styles.detailCard}>
-                    <Text style={styles.label}>Location</Text>
-                    <Text style={styles.value}>{placeAddress || 'Address not available'}</Text>
+                    <Text style={styles.label}>Distance</Text>
+                    <Text style={styles.value}>{distanceDetail}</Text>
                 </View>
                 
-                <Text style={styles.note}>
-                    Note: Map rendering is handled by the client-side Leaflet library using OpenStreetMap data, requiring no commercial API key.
-                </Text>
             </View>
         </View>
     );
@@ -77,21 +73,19 @@ const LandmarkDetailsScreen = ({ route }: Props) => {
 export default LandmarkDetailsScreen;
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#FFFFFF' },
-    mapContainer: { width: '100%', height: 250, backgroundColor: '#E0F2FE' },
+    container: { flex: 1, backgroundColor: '#E0F2FE' },
+    mapContainer: { width: '100%', height: 250, backgroundColor: '#E0F2FE' , borderRadius: 10},
     map: { flex: 1 }, 
-    
+
     detailsContent: { padding: 20 },
-    title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, color: '#0C1559' },
+    title: { fontSize: 28, fontWeight: 'bold', marginBottom: 20, color: '#00223D' },
     detailCard: {
-        backgroundColor: '#F0F8FF', 
+        backgroundColor: '#C3E2F1', 
         padding: 15,
         borderRadius: 8,
         marginBottom: 10,
         borderLeftWidth: 3,
-        borderLeftColor: '#C3E2F1',
     },
-    label: { fontSize: 14, fontWeight: '600', color: '#555' },
-    value: { fontSize: 18, marginTop: 2, color: '#333' },
-    note: { marginTop: 30, fontSize: 12, color: '#888', fontStyle: 'italic' },
+    label: { fontSize: 14, fontWeight: '600', color: '#00223D' },
+    value: { fontSize: 18, marginTop: 2, color: '#00223D' },
 });

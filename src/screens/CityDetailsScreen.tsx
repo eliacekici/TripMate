@@ -12,7 +12,7 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack'; 
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App'; 
-import { searchPlaces } from '../services/OpenSourcePlacesService';
+import { searchPlaces, getPlacePhotoUrl } from '../services/OpenSourcePlacesService';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CityDetailsScreen'>;
 
@@ -27,6 +27,7 @@ type Place = {
       longitude: number;
     };
   };
+  distanceDetail: string;
 };
 
 const CityDetailsScreen = ({ route }: Props) => {
@@ -34,11 +35,18 @@ const CityDetailsScreen = ({ route }: Props) => {
   const { city } = route.params;
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cityPhotoUrl, setCityPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchPlaces = async () => {
+    const fetchCityData = async () => {
       try {
-        const results = await searchPlaces(city); 
+        // 3. FETCH DATA AND PHOTO CONCURRENTLY
+        const [results, photoUrl] = await Promise.all([
+          searchPlaces(city),
+          getPlacePhotoUrl(city) // Call the Unsplash fetching function
+        ]);
+        
+        setCityPhotoUrl(photoUrl);
         
         console.log('Open Source Places Results:', results); 
 
@@ -48,15 +56,15 @@ const CityDetailsScreen = ({ route }: Props) => {
           setPlaces([]);
         }
       } catch (error) {
-        console.error('Error fetching Open Source places:', error); 
-        setPlaces([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+        console.error('Error fetching city data:', error); 
+        setPlaces([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetchPlaces();
-  }, [city]);
+    fetchCityData();
+  }, [city]);
 
   if (loading) {
     return (
@@ -67,15 +75,20 @@ const CityDetailsScreen = ({ route }: Props) => {
   }
 
   const renderHeader = () => (
-    <>
-      <Image
-        source={require('../assets/images/city_placeholder.png')}
-        style={styles.topImage}
-        resizeMode="cover"
-      />
-      <Text style={styles.cityTitle}>{city}</Text>
-    </>
-  );
+    <>
+      <Image
+        // 4. USE DYNAMIC SOURCE (state variable)
+        source={
+          cityPhotoUrl 
+            ? { uri: cityPhotoUrl } 
+            : require('../assets/images/city_placeholder.png')
+        }
+        style={styles.topImage}
+        resizeMode="cover"
+      />
+      <Text style={styles.cityTitle}>{city}</Text>
+    </>
+  );
 
   return (
     <View style={styles.container}>
@@ -99,9 +112,10 @@ const CityDetailsScreen = ({ route }: Props) => {
                         navigation.navigate('LandmarkDetailsScreen', {
                             placeName: item.name,
                             placeCategories: item.categories,
-                            placeAddress: item.location?.address || 'Location data not available',
                             lat: latitude, 
                             lon: longitude,
+                            distanceDetail: item.distanceDetail,
+                            
                         });
                     }}
                 >
@@ -109,9 +123,7 @@ const CityDetailsScreen = ({ route }: Props) => {
             <Text style={styles.placeKinds}>
               {item.categories.map((c) => c.name).join(', ') || 'Unknown type'}
             </Text>
-            {item.location?.address && (
-              <Text style={styles.placeAddress}>{item.location.address}</Text>
-            )}
+            <Text style={styles.placeAddress}>{item.distanceDetail}</Text>
             </TouchableOpacity>
             )}
         ListEmptyComponent={<Text style={{textAlign: 'center', marginTop: 20}}>No places found.</Text>}
@@ -126,7 +138,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E0F2FE' },
   loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   topImage: { width: '100%', height: 200 },
-  cityTitle: { fontSize: 24, fontWeight: '700', margin: 16 },
+  cityTitle: { fontSize: 24, fontWeight: '700', margin: 16, color: '#00223D'},
   placeItem: {
     padding: 16,
     backgroundColor: '#C3E2F1',
@@ -135,6 +147,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   placeName: { fontSize: 18, fontWeight: '700' },
-  placeKinds: { fontSize: 14, color: '#555', marginTop: 4 },
-  placeAddress: { fontSize: 12, color: '#333', marginTop: 2 },
+  placeKinds: { fontSize: 14, color: '#00223D', marginTop: 4 },
+  placeAddress: { fontSize: 14, color: '#00223D', marginTop: 2 },
 });
