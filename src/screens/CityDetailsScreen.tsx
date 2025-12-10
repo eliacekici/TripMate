@@ -33,12 +33,17 @@ type Place = {
 const CityDetailsScreen = ({ route }: Props) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { city } = route.params;
+
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
   const [cityPhotoUrl, setCityPhotoUrl] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCityData = async () => {
+      setLoading(true);
+      setApiError(null);
+
       try {
         // 3. FETCH DATA AND PHOTO CONCURRENTLY
         const [results, photoUrl] = await Promise.all([
@@ -55,9 +60,14 @@ const CityDetailsScreen = ({ route }: Props) => {
         } else {
           setPlaces([]);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error fetching city data:', error); 
         setPlaces([]);
+        
+       setApiError(
+                    "Could not load points of interest. The map service may be busy or the location is too remote. Please try again."
+                );
+
       } finally {
         setLoading(false);
       }

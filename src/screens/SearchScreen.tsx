@@ -1,11 +1,11 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList, Image, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
     DashboardGuides: undefined;
-    CityDetails: { city: string };
+    CityDetailsScreen: { city: string };
 };
 
 
@@ -20,7 +20,28 @@ const suggestions = [
 ];
 
 const SearchScreen = () => {
-const navigation = useNavigation<SearchScreenNavigationProp>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  // 1. Add state for the search input
+    const [searchText, setSearchText] = useState('');
+
+    const handleCityPress = (city: string) => {
+        // Navigate to the CityDetails screen, passing the selected city name
+        navigation.navigate('CityDetailsScreen', { city });
+    };
+
+    // 2.Function to handle manual search submission
+    const handleSearchSubmit = () => {
+        // Only navigate if the user has typed something
+        if (searchText.trim().length > 0) {
+            // Navigate using the text entered by the user
+            navigation.navigate('CityDetailsScreen', { city: searchText.trim() });
+            
+            // Optional: Clear the input and hide the keyboard after navigation
+            setSearchText('');
+            Keyboard.dismiss(); 
+        }
+    };
 
   return (
     <View style={styles.container}>
@@ -32,29 +53,53 @@ const navigation = useNavigation<SearchScreenNavigationProp>();
             style={styles.input}
             placeholder="Where are you going?"
             placeholderTextColor={styles.placeholder.color}
-          />
-          <Image source={require('../assets/images/search_icon.png')} style={{ width: 19, height: 19, marginRight: 6,  }} />
+            // 1. Connect state to the input field
+                        value={searchText}
+                        onChangeText={setSearchText}
+                        
+                        // 3. Trigger search when the user presses 'return' on the keyboard
+                        onSubmitEditing={handleSearchSubmit} 
+                        
+                        returnKeyType="search" // Shows 'Search' button on the keyboard
+                    />
+
+                    {/* Optional: Add a magnifying glass button to trigger search */}
+                    <TouchableOpacity onPress={handleSearchSubmit} disabled={searchText.trim().length === 0}>
+                        <Image source={require('../assets/images/search_icon.png')} style={{ width: 19, height: 19, marginRight: 6, opacity: searchText.trim().length > 0 ? 1 : 0.5 }} />
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={() => navigation.navigate('DashboardGuides')}>
+                    <Text style={styles.cancel}>Cancel</Text>
+                </TouchableOpacity>
+            </View>
+          {/* Suggestions (Now only show if search text is empty) */}
+            {searchText.trim().length === 0 && (
+                <FlatList
+                    data={suggestions}
+                    keyExtractor={(item) => item.id}
+                    ListHeaderComponent={() => (
+                        <Text style={styles.suggestionsTitle}>Popular Destinations</Text>
+                    )}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity 
+                            style={styles.suggestionItem}
+                            onPress={() => handleCityPress(item.name)}
+                        >
+                            <Image source={require('../assets/images/location_icon.png')} style={{ width: 22, height: 22, marginRight: 10 }} />
+                            <Text style={styles.suggestionText}>{item.name}</Text>
+                        </TouchableOpacity>
+                    )}
+                />
+            )}
+
+            {/* If search text is present, you would typically show live filtered results here. 
+                For now, if the user is typing, they must submit (using the keyboard or button) 
+                to navigate to CityDetailsScreen.
+            */}
+
         </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate('DashboardGuides')}>
-          <Text style={styles.cancel}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Suggestions */}
-      <FlatList
-        data={suggestions}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.suggestionItem}>
-            <Image source={require('../assets/images/location_icon.png')} style={{ width: 22, height: 22, marginRight: 10 }} />
-            <Text style={styles.suggestionText}>{item.name}</Text>
-          </View>
-        )}
-      />
-
-    </View>
-  );
+    );
 }
 
 export default SearchScreen;
@@ -105,6 +150,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
     marginBottom:15,
+  },
+  suggestionsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#00223D',
+    marginBottom: 10,
+    marginTop: 5,
   },
   suggestionItem: {
     flexDirection: 'row',

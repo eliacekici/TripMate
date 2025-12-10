@@ -54,6 +54,8 @@ const getCityCoordinates = async (city: string): Promise<Coordinates> => {
         q: city,
         format: 'json',
         limit: '1',
+        extratags: '1', // Recommended by Nominatim policy
+        addressdetails: '1', // Recommended by Nominatim policy
     });
     const url = `${NOMINATIM_URL}?${params.toString()}`;
     
@@ -78,28 +80,29 @@ const getCityCoordinates = async (city: string): Promise<Coordinates> => {
 };
 
 
+// --- 3. Helper Functions (API Calls) ---
 const getOSMPlaces = async (lat: number, lon: number, limit: number): Promise<any[]> => {
+    
+    // Using the simplified query from above (removed the unnecessary outer parentheses)
     const query = `
-        [out:json][timeout:20];
-        (
-          nwr[tourism~"attraction|museum|viewpoint|zoo|theme_park"](around:5000,${lat},${lon});
-        );
+        [out:json][timeout:25];
+        nwr[tourism~"attraction|museum|viewpoint|zoo|theme_park"](around:2000,${lat},${lon});
         out ${limit} center;
     `;
     
     const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
     
-    const response = await fetch(OVERPASS_URL, {
-        method: 'POST',
-        body: `data=${encodeURIComponent(query)}`,
+    const response = await fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+            "Content-Type": "text/plain"
+        },
+        body: query
     });
 
     if (!response.ok) {
-        const errorBody = await response.text();
-        console.error('Overpass API Error:', response.status, errorBody);
+        const error = await response.text();
+        console.error("Overpass API Error:", response.status, error);
         return [];
     }
 
@@ -107,7 +110,7 @@ const getOSMPlaces = async (lat: number, lon: number, limit: number): Promise<an
         const data = await response.json();
         return data.elements || [];
     } catch (e) {
-        console.error('Overpass JSON Parse Failed:', e);
+        console.error("Overpass JSON Parse Failed:", e);
         return [];
     }
 };
