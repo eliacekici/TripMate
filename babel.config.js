@@ -2,12 +2,14 @@
 
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
+  //presets: ['babel-preset-expo'],
+
   plugins: [
     [
       'module:react-native-dotenv',
       {
         moduleName: '@env',
-        path: '.env', // Check that this path is correct relative to the root
+        path: '.env', 
         safe: false, 
         allowUndefined: true,
       },

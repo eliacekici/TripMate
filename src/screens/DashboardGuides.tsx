@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   View,
   Text,
   StyleSheet,
@@ -9,10 +10,13 @@ import {
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 type RootStackParamList = {
   DashboardGuides: undefined;
@@ -125,14 +129,14 @@ const styles = StyleSheet.create({
   }, 
   topImage: { 
     width: '100%', 
-    height: 180 
+    height: SCREEN_WIDTH * 0.48, 
   }, 
   container: { 
     flex: 1, 
     backgroundColor: '#E0F2FE', 
     borderTopLeftRadius: 10, 
     borderTopRightRadius: 10, 
-    paddingHorizontal: 16, 
+    paddingHorizontal: SCREEN_WIDTH * 0.04,
     marginTop: -24, // overlap top image
     paddingTop: 24, 
   }, 
@@ -144,8 +148,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10, 
     paddingVertical: 10, 
     marginBottom: 16, 
-    width: 375,
-    height: 43,
   }, 
   searchInput: { 
     flex: 1, 
@@ -164,9 +166,9 @@ const styles = StyleSheet.create({
     flex: 1 / 3, 
   }, 
   placeImage: { 
-    width: 79, 
-    height: 79, 
-    borderRadius: 39.5, 
+    width: SCREEN_WIDTH * 0.22, 
+    height: SCREEN_WIDTH * 0.22,
+    borderRadius: (SCREEN_WIDTH * 0.22) / 2, 
     marginBottom: 8, 
   }, 
   placeName: { 
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10, 
     justifyContent: 'space-around', 
     backgroundColor: '#C3E2F1', 
+    paddingBottom: Platform.OS === 'ios' ? 0 : 5,
   }, 
   footerItem: { 
     alignItems: 'center', 

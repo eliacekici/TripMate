@@ -1,5 +1,6 @@
-// --- 1. Type Definitions ---
+import { UNSPLASH_ACCESS_KEY, GEOAPIFY_API_KEY } from '@env';
 
+// --- 1. Type Definitions ---
 type Place = {
     fsq_id: string;
     name: string;
@@ -21,7 +22,7 @@ type Coordinates = {
 
 // --- 2. Main Search Function ---
 
-export const searchPlaces = async (city: string, limit = 10): Promise<Place[]> => {
+export const searchAttractions = async (city: string, limit = 10): Promise<Place[]> => {
     try {
         // Step 1: Get city coordinates (Nominatim)
         const { lat: centerLat, lon: centerLon } = await getCityCoordinates(city);
@@ -38,10 +39,28 @@ export const searchPlaces = async (city: string, limit = 10): Promise<Place[]> =
         ]);
 
         // Step 4: Combine and format results, passing the center coordinates for distance calculation
-        return formatResults(osmPlaces, wikiArticles, centerLat, centerLon);
+        return formatAttractionResults(osmPlaces, wikiArticles, centerLat, centerLon);
         
     } catch (error) {
         console.error('Error fetching places from open sources:', error);
+        return [];
+    }
+};
+
+export const searchFoodAndDrinks = async (city: string, limit = 10): Promise<Place[]> => {
+    try {
+        const { lat: centerLat, lon: centerLon } = await getCityCoordinates(city);
+        
+        if (!centerLat || !centerLon) return [];
+
+        // Only fetch Geoapify data
+        const geoapifyPlaces = await getGeoapifyPlaces(centerLat, centerLon, limit);
+
+        // Format only Geoapify results
+        return formatFoodAndDrinkResults(geoapifyPlaces, centerLat, centerLon);
+
+    } catch (error) {
+        console.error('Error fetching food and drinks:', error);
         return [];
     }
 };
@@ -83,9 +102,9 @@ const getCityCoordinates = async (city: string): Promise<Coordinates> => {
 // --- 3. Helper Functions (API Calls) ---
 const getOSMPlaces = async (lat: number, lon: number, limit: number): Promise<any[]> => {
     
-    // Using the simplified query from above (removed the unnecessary outer parentheses)
+    // Queries tourist attractions
     const query = `
-        [out:json][timeout:25];
+        [out:json][timeout:60];
         nwr[tourism~"attraction|museum|viewpoint|zoo|theme_park"](around:2000,${lat},${lon});
         out ${limit} center;
     `;
@@ -149,7 +168,47 @@ const getWikipediaArticles = async (lat: number, lon: number, limit: number): Pr
     }
 };
 
-import { UNSPLASH_ACCESS_KEY } from '@env';
+const getGeoapifyPlaces = async (lat: number, lon: number, limit: number): Promise<any[]> => {
+    if (!GEOAPIFY_API_KEY) {
+        console.error("GEOAPIFY_API_KEY is missing from environment variables.");
+        return [];
+    }
+    
+    const GEOAPIFY_URL = 'https://api.geoapify.com/v2/places';
+    
+    // Categories for food and drink
+    const categories = 'catering.restaurant,catering.cafe,catering.fast_food,catering.pub'; 
+
+    const RADIUS_IN_METERS = 5000; // Search within 5km
+    
+    const params = new URLSearchParams({
+        // Filter by circle: longitude, latitude, radius (meters)
+        filter: `circle:${lon},${lat},${RADIUS_IN_METERS}`, 
+        categories: categories,
+        limit: String(limit),
+        apiKey: GEOAPIFY_API_KEY, 
+    });
+
+    const url = `${GEOAPIFY_URL}?${params.toString()}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            const error = await response.text();
+            console.error("Geoapify API Error:", response.status, error);
+            return [];
+        }
+
+        const data = await response.json();
+        return data.features || [];
+    } catch (e) {
+        console.error("Geoapify Fetch Failed:", e);
+        return [];
+    }
+};
+
+// --- Helper Utilities (Photo, Distance) ---
 export const getPlacePhotoUrl = async (placeName: string): Promise<string | null> => {
     const unsplashApiUrl = 'https://api.unsplash.com/search/photos';
     
@@ -193,6 +252,7 @@ export const getPlacePhotoUrl = async (placeName: string): Promise<string | null
         return null;
     }
 };
+
 /**
  * Calculates distance in meters between two coordinates using the Haversine formula.
  */
@@ -225,21 +285,22 @@ const formatDistance = (meters: number): string => {
 
 // --- 4. Result Formatting ---
 
-const formatResults = (osmPlaces: any[], wikiArticles: any[], centerLat: number, centerLon: number): Place[] => {
+const formatAttractionResults = (
+    osmPlaces: any[], 
+    wikiArticles: any[], 
+    centerLat: number, 
+    centerLon: number
+): Place[] => {
     const combinedResults: Place[] = [];
 
-    // Map OSM Places (POI data)
+    // 1. Map OSM Places (POI data) - Existing logic
     osmPlaces.forEach((p) => {
         const categoryName = p.tags?.tourism || p.tags?.amenity || 'Landmark';
         const placeName = p.tags?.name;
-
-        // Determine coordinates
         const latitude = p.lat || p.center?.lat;
         const longitude = p.lon || p.center?.lon;
         
         if (placeName && typeof latitude === 'number' && typeof longitude === 'number') {
-            
-            // Calculate distance from the search center
             const distanceInMeters = calculateDistance(centerLat, centerLon, latitude, longitude);
             
             combinedResults.push({
@@ -247,25 +308,16 @@ const formatResults = (osmPlaces: any[], wikiArticles: any[], centerLat: number,
                 name: placeName,
                 categories: [{ name: categoryName.replace(/_/g, ' ') }],
                 location: { address: p.tags?.["addr:street"] || `Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}` },
-                geocodes: {
-                    main: {
-                        latitude: latitude,
-                        longitude: longitude,
-                    }
-                },
-                // Second detail card: Calculated distance
+                geocodes: { main: { latitude, longitude } },
                 distanceDetail: formatDistance(distanceInMeters),
             });
         }
     });
 
-    // Map Wikipedia Articles (Content data)
+    // 2. Map Wikipedia Articles (Content data) - Existing logic
     wikiArticles.forEach((a) => {
         if (a.lat && a.lon) {
-            
-            // For Wikipedia, use the distance (a.dist) provided by the API if available, or calculate it
             const wikiDistanceInMeters = a.dist ? parseFloat(a.dist) : null;
-            
             const distanceInMeters = wikiDistanceInMeters ?? calculateDistance(centerLat, centerLon, a.lat, a.lon);
             
             combinedResults.push({
@@ -273,13 +325,41 @@ const formatResults = (osmPlaces: any[], wikiArticles: any[], centerLat: number,
                 name: a.title,
                 categories: [{ name: 'General Interest' }],
                 location: { address: 'Wikipedia Article' }, 
-                geocodes: {
-                    main: {
-                        latitude: a.lat,
-                        longitude: a.lon,
-                    }
-                },
-                // Second detail card: Calculated/formatted distance
+                geocodes: { main: { latitude: a.lat, longitude: a.lon } },
+                distanceDetail: formatDistance(distanceInMeters),
+            });
+        }
+    });
+
+    return combinedResults;
+};
+
+const formatFoodAndDrinkResults = (
+    geoapifyPlaces: any[], 
+    centerLat: number, 
+    centerLon: number
+): Place[] => {
+    const combinedResults: Place[] = [];
+
+    // 1. Map Geoapify Places (Food & Restaurants) - Existing logic
+    geoapifyPlaces.forEach((feature) => {
+        const p = feature.properties;
+        const geometry = feature.geometry;
+        
+        const longitude = geometry.coordinates[0];
+        const latitude = geometry.coordinates[1]; 
+        
+        if (p.name && typeof latitude === 'number' && typeof longitude === 'number') {
+            
+            const distanceInMeters = calculateDistance(centerLat, centerLon, latitude, longitude);
+            const primaryCategory = p.categories?.[0] || 'Food & Drink'; 
+            
+            combinedResults.push({
+                fsq_id: `geoapify-${p.place_id}`,
+                name: p.name,
+                categories: [{ name: primaryCategory.replace('catering.', '').replace(/_/g, ' ') }],
+                location: { address: p.address_line2 || p.address_line1 || `Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}` },
+                geocodes: { main: { latitude, longitude } },
                 distanceDetail: formatDistance(distanceInMeters),
             });
         }
