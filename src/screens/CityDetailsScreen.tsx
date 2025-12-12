@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'; 
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -17,6 +18,7 @@ import {
     searchFoodAndDrinks, 
     getPlacePhotoUrl 
 } from '../services/OpenSourcePlacesService';
+
 
 type Place = {
   fsq_id: string;
@@ -35,8 +37,51 @@ type Place = {
 type Props = NativeStackScreenProps<RootStackParamList, 'CityDetailsScreen'>;
 type Category = 'Attractions' | 'Food & Drink';
 
+interface FooterProps {
+    navigation: NavigationProp<RootStackParamList>;
+}
+
+const AppFooter: React.FC<FooterProps> = ({ navigation }) => {
+    return (
+        <View style={footerStyles.footer}>
+            {/* Home Button (Navigates to DashboardGuides) */}
+            <TouchableOpacity 
+                style={footerStyles.footerItem} 
+                onPress={() => navigation.navigate('DashboardGuides')}
+            >
+                <Image
+                    source={require('../assets/images/guides_logo.png')}
+                    style={footerStyles.footerIcon1}
+                    resizeMode="contain"
+                />
+                <Text style={footerStyles.footerText}>Home</Text>
+            </TouchableOpacity>
+
+            {/* My Plans */}
+            <View style={footerStyles.footerItem}>
+                <Image
+                    source={require('../assets/images/myPlans_logo.png')}
+                    style={footerStyles.footerIcon2}
+                    resizeMode="contain"
+                />
+                <Text style={footerStyles.footerText}>My Plans</Text>
+            </View>
+
+            {/* Settings */}
+            <View style={footerStyles.footerItem}>
+                <Image
+                    source={require('../assets/images/profile_logo.png')}
+                    style={footerStyles.footerIcon3}
+                    resizeMode="contain"
+                />
+                <Text style={footerStyles.footerText}>Settings</Text>
+            </View>
+        </View>
+    );
+};
+
 const CityDetailsScreen = ({ route }: Props) => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>(); 
   const { city } = route.params;
 
   const [attractions, setAttractions] = useState<Place[]>([]);
@@ -90,7 +135,7 @@ const CityDetailsScreen = ({ route }: Props) => {
             </View>
         );
     }
-        // --- New/Updated Header Component ---
+     
     const renderHeader = () => (
         <>
             <Image
@@ -164,7 +209,10 @@ const CityDetailsScreen = ({ route }: Props) => {
                 ListHeaderComponent={renderHeader}
                 renderItem={renderPlaceItem}
                 ListEmptyComponent={<Text style={styles.emptyText}>No {selectedCategory} found in {city}.</Text>}
+                style={{ flex: 1 }}
             />
+
+            <AppFooter navigation={navigation} />
         </View>
     );
 };
@@ -228,4 +276,38 @@ const styles = StyleSheet.create({
     placeAddress: { fontSize: 14, color: '#00223D', marginTop: 2 },
     errorText: { color: 'red', textAlign: 'center', marginBottom: 10 },
     emptyText: { textAlign: 'center', marginTop: 20, paddingBottom: 20, color: '#00223D' }
+});
+
+const footerStyles = StyleSheet.create({
+    footer: {
+        flexDirection: 'row',
+        borderTopWidth: 1,
+        borderColor: '#0C1559',
+        paddingVertical: 10,
+        justifyContent: 'space-around',
+        backgroundColor: '#C3E2F1',
+        // Adjust padding for different platforms, especially iOS
+        paddingBottom: Platform.OS === 'ios' ? 30 : 5, 
+    },
+    footerItem: {
+        alignItems: 'center',
+    },
+    footerText: {
+        color: '#000', // Assuming default text color
+    },
+    footerIcon1: {
+        width: 21,
+        height: 37,
+        marginBottom: 4,
+    },
+    footerIcon2: {
+        width: 40,
+        height: 40,
+        marginBottom: 4,
+    },
+    footerIcon3: {
+        width: 41,
+        height: 41,
+        marginBottom: 4,
+    },
 });

@@ -47,6 +47,12 @@ const places = [
 const DashboardGuides = () => {
   const navigation = useNavigation<DashboardGuidesNavigationProp>();
 
+  // Function to handle Home navigation
+  const handleHomePress = () => {
+    // Navigate back to the DashboardGuides screen
+    navigation.navigate('DashboardGuides');
+  };
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView style={{ flex: 1 }}>
