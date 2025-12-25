@@ -1,0 +1,29 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/Karma/Karma-Bold.ttf",
+      "sha1": "0ccc94d445ee1a55ab4d2a08ebd277bf4ebc02b2"
+    },
+    {
+      "path": "src/assets/fonts/Karma/Karma-Light.ttf",
+      "sha1": "f315dd348db03a137a0f7f8211c9e42f58c8af87"
+    },
+    {
+      "path": "src/assets/fonts/Karma/Karma-Medium.ttf",
+      "sha1": "074474c2a10018caa23b17cc5f025ebd2a37f43d"
+    },
+    {
+      "path": "src/assets/fonts/Karma/Karma-Regular.ttf",
+      "sha1": "9dab238c6b33ad1de25df6ba75e62331788c5162"
+    },
+    {
+      "path": "src/assets/fonts/Karma/Karma-SemiBold.ttf",
+      "sha1": "5ce0d230ad01425eb49ccb67e13864bc6c1865fc"
+    },
+    {
+      "path": "src/assets/fonts/Karma/OFL.txt",
+      "sha1": "f0c490b6a85274b4b5115f462aac1bb8ace48770"
+    }
+  ]
+}

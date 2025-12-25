@@ -9,6 +9,7 @@ import DashboardGuides from './src/screens/DashboardGuides';
 import SearchScreen from './src/screens/SearchScreen';
 import CityDetailsScreen from './src/screens/CityDetailsScreen';
 import LandmarkDetailsScreen from './src/screens/LandmarkDetailsScreen';
+import MyPlansLoggedOutScreen from './src/screens/MyPlansLoggedOutScreen';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -25,6 +26,8 @@ export type RootStackParamList = {
         lon: number;
         distanceDetail: string;
   }
+
+  MyPlansLoggedOutScreen: undefined;
   
 };
 
@@ -46,6 +49,7 @@ export default function App() {
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
         <Stack.Screen name="CityDetailsScreen" component={CityDetailsScreen} />
         <Stack.Screen name="LandmarkDetailsScreen" component={LandmarkDetailsScreen} />
+        <Stack.Screen name="MyPlansLoggedOutScreen" component={MyPlansLoggedOutScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

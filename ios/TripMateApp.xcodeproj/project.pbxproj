@@ -11,6 +11,12 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8DB8A29CD2CA48C3B6DC01CC /* Karma-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C8C31DCF9D0F46F697545DA6 /* Karma-Bold.ttf */; };
+		8DDCD7C153D849D0B43DA8D0 /* Karma-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E78D181D5BC4F6D9438CBBD /* Karma-Light.ttf */; };
+		E876A8B092A6460897F0505A /* Karma-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A27B42C96D841D7B03F071D /* Karma-Medium.ttf */; };
+		E954B1457DF64B03816D1874 /* Karma-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F480C7C5C06742C3A132A0BE /* Karma-Regular.ttf */; };
+		3EBA0D8BCDC646BAA0DC011A /* Karma-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5CF671257446489AA54159F8 /* Karma-SemiBold.ttf */; };
+		E3D1FE68C51247F480292816 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC6B858DEBCB42E38A7AE009 /* OFL.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +30,12 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = TripMateApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TripMateApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		C8C31DCF9D0F46F697545DA6 /* Karma-Bold.ttf */ = {isa = PBXFileReference; name = "Karma-Bold.ttf"; path = "../src/assets/fonts/Karma/Karma-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8E78D181D5BC4F6D9438CBBD /* Karma-Light.ttf */ = {isa = PBXFileReference; name = "Karma-Light.ttf"; path = "../src/assets/fonts/Karma/Karma-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6A27B42C96D841D7B03F071D /* Karma-Medium.ttf */ = {isa = PBXFileReference; name = "Karma-Medium.ttf"; path = "../src/assets/fonts/Karma/Karma-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F480C7C5C06742C3A132A0BE /* Karma-Regular.ttf */ = {isa = PBXFileReference; name = "Karma-Regular.ttf"; path = "../src/assets/fonts/Karma/Karma-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5CF671257446489AA54159F8 /* Karma-SemiBold.ttf */ = {isa = PBXFileReference; name = "Karma-SemiBold.ttf"; path = "../src/assets/fonts/Karma/Karma-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BC6B858DEBCB42E38A7AE009 /* OFL.txt */ = {isa = PBXFileReference; name = "OFL.txt"; path = "../src/assets/fonts/Karma/OFL.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +86,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				5E729A47496D4CC096A582B5 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -96,6 +109,20 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		5E729A47496D4CC096A582B5 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				C8C31DCF9D0F46F697545DA6 /* Karma-Bold.ttf */,
+				8E78D181D5BC4F6D9438CBBD /* Karma-Light.ttf */,
+				6A27B42C96D841D7B03F071D /* Karma-Medium.ttf */,
+				F480C7C5C06742C3A132A0BE /* Karma-Regular.ttf */,
+				5CF671257446489AA54159F8 /* Karma-SemiBold.ttf */,
+				BC6B858DEBCB42E38A7AE009 /* OFL.txt */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -159,6 +186,12 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				8DB8A29CD2CA48C3B6DC01CC /* Karma-Bold.ttf in Resources */,
+				8DDCD7C153D849D0B43DA8D0 /* Karma-Light.ttf in Resources */,
+				E876A8B092A6460897F0505A /* Karma-Medium.ttf in Resources */,
+				E954B1457DF64B03816D1874 /* Karma-Regular.ttf in Resources */,
+				3EBA0D8BCDC646BAA0DC011A /* Karma-SemiBold.ttf in Resources */,
+				E3D1FE68C51247F480292816 /* OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
