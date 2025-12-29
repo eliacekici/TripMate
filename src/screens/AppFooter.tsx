@@ -11,7 +11,7 @@ export type RootStackParamList = {
     SearchScreen: undefined;     
     CityDetailsScreen: { city: string };     
     Login: undefined;     
-    SignUp: undefined; 
+    SignUpScreen: undefined; 
     LandmarkDetailsScreen: { 
         placeName: string; 
         placeCategories: { name: string }[]; 

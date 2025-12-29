@@ -58,8 +58,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   text: {
-    fontSize: 18,
-    fontFamily: 'Karma-Regular',
+    fontSize: 16,
+    fontFamily: 'Karma-Bold',
     color: '#000000',
   },
 });

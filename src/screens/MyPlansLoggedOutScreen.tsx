@@ -55,7 +55,7 @@ const MyPlansLoggedOutScreen = () => {
 
         {/* SIGN UP */}
         <Text style={styles.signupText}>Don't have an account yet?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUpScreen')}>
           <Text style={styles.signupLink}>Sign up</Text>
         </TouchableOpacity>
         
