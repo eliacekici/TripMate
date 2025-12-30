@@ -48,7 +48,7 @@ const MyPlansLoggedOutScreen = () => {
         {/* LOGIN BUTTON */}
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('LoginScreen')}
         >
           <Text style={styles.loginButtonText}>Log in</Text>
         </TouchableOpacity>
@@ -75,8 +75,8 @@ export default MyPlansLoggedOutScreen;
 // --- Stylesheet ---
 
 const COLORS = {
-  NAVY_BLUE: '#00223D', // The dark blue for buttons/links
-  LIGHT_BLUE_BACKGROUND: '#E0F2FE', // The subtle background color
+  NAVY_BLUE: '#00223D', 
+  LIGHT_BLUE_BACKGROUND: '#E0F2FE', 
   DARK_TEXT: '#000000',
   GRAY_TEXT: '#000000',
 };

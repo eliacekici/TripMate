@@ -10,7 +10,7 @@ export type RootStackParamList = {
     ProfileScreen: undefined;     
     SearchScreen: undefined;     
     CityDetailsScreen: { city: string };     
-    Login: undefined;     
+    LoginScreen: undefined;     
     SignUpScreen: undefined; 
     LandmarkDetailsScreen: { 
         placeName: string; 

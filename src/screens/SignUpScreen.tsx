@@ -28,6 +28,7 @@ const COLORS = {
   RED: '#E74C3C', 
   GREEN: '#2ECC71', 
   WHITE: '#FFFFFF',
+  BORDER_COLOR: '#0C1559',
 };
 
 // --- CUSTOM ASSET IMPORTS ---
@@ -106,7 +107,7 @@ const SignUpScreen = () => {
     }
 
     Alert.alert('Success', 'Account created successfully!');
-    navigation.navigate('Login'); 
+    navigation.navigate('LoginScreen'); 
   } catch (error) {
     console.error(error);
     setIsLoading(false);
@@ -144,7 +145,7 @@ const SignUpScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.inactiveTab}
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate('LoginScreen')}
           >
             <Text style={styles.inactiveTabText}>Log in</Text>
           </TouchableOpacity>
@@ -225,7 +226,7 @@ const SignUpScreen = () => {
         {/* 6. Already have an account? Log in */}
         <View style={styles.loginLinkContainer}>
           <Text style={styles.loginText}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
             <Text style={styles.loginLink}>Log in</Text>
           </TouchableOpacity>
         </View>
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Karma-Bold',
     color: COLORS.NAVY_BLUE,
   },
   inactiveTab: {
@@ -279,11 +280,13 @@ const styles = StyleSheet.create({
   },
   inactiveTabText: {
     fontSize: 16,
+    fontFamily: 'Karma-Regular',
     color: COLORS.GRAY_TEXT,
   },
   introText: {
     width: '100%',
     fontSize: 16,
+    fontFamily: 'Karma-SemiBold',
     color: COLORS.DARK_TEXT,
     marginBottom: 40,
     textAlign: 'left',
@@ -298,7 +301,7 @@ const styles = StyleSheet.create({
     color: COLORS.DARK_TEXT,
     marginBottom: 15,
     borderWidth: 1,
-    borderColor: COLORS.NAVY_BLUE,
+    borderColor: COLORS.BORDER_COLOR,
   },
   conditionsArea: {
     width: '100%',

@@ -11,6 +11,7 @@ import CityDetailsScreen from './src/screens/CityDetailsScreen';
 import LandmarkDetailsScreen from './src/screens/LandmarkDetailsScreen';
 import MyPlansLoggedOutScreen from './src/screens/MyPlansLoggedOutScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import LoginScreen from './src/screens/LoginScreen';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -30,6 +31,7 @@ export type RootStackParamList = {
 
   MyPlansLoggedOutScreen: undefined;
   SignUpScreen: undefined;
+  LoginScreen: undefined;
   
 };
 
@@ -53,6 +55,7 @@ export default function App() {
         <Stack.Screen name="LandmarkDetailsScreen" component={LandmarkDetailsScreen} />
         <Stack.Screen name="MyPlansLoggedOutScreen" component={MyPlansLoggedOutScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
