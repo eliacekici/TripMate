@@ -63,46 +63,56 @@ const SignUpScreen = () => {
   const isPasswordValid = Object.values(passwordCriteria).every(Boolean);
 
   // --- Handler for Sign Up Logic ---
-  const handleSignUp = () => {
-    if (!email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields.');
+  const handleSignUp = async () => {
+  if (!email || !password || !confirmPassword) {
+    Alert.alert('Error', 'Please fill in all fields.');
+    return;
+  }
+  
+  if (!isPasswordValid) {
+    Alert.alert('Error', 'Password does not meet all security criteria.');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    Alert.alert('Error', 'Password and Confirm Password do not match.');
+    return;
+  }
+  
+  if (!isChecked) {
+    Alert.alert('Error', 'You must agree to the privacy and policy to sign up.');
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    const response = await fetch('http://10.0.2.2:5000/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        password,
+        confirmPassword,
+      }),
+    });
+
+    const data = await response.json();
+    setIsLoading(false);
+
+    if (!response.ok) {
+      Alert.alert('Signup Failed', data.message || 'Something went wrong');
       return;
     }
-    
-    if (!isPasswordValid) {
-      Alert.alert('Error', 'Password does not meet all security criteria.');
-      return;
-    }
 
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Password and Confirm Password do not match.');
-      return;
-    }
-    
-    if (!isChecked) {
-      Alert.alert('Error', 'You must agree to the privacy and policy to sign up.');
-      return;
-    }
-
-    setIsLoading(true);
-
-    // --- Placeholder for API/Database Registration ---
-    console.log('Attempting to sign up with:', { email, password });
-    
-    // Simulate API call
-    setTimeout(() => {
-        setIsLoading(false);
-        const registrationSuccessful = true; 
-
-        if (registrationSuccessful) {
-            Alert.alert('Success', 'Account created successfully!');
-            navigation.navigate('Login'); 
-        } else {
-            Alert.alert('Registration Failed', 'This email may already be registered.');
-        }
-    }, 2000); 
-  };
-
+    Alert.alert('Success', 'Account created successfully!');
+    navigation.navigate('Login'); 
+  } catch (error) {
+    console.error(error);
+    setIsLoading(false);
+    Alert.alert('Error', 'Unable to connect to the server.');
+  }
+};
 
   // --- Helper Component for Password Conditions (Unchanged) ---
   const ConditionCheck = ({ met, text }: { met: boolean; text: string }) => {
