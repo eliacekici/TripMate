@@ -41,7 +41,7 @@ const COLORS = {
     GRAY_TEXT: '#888888',
     BORDER_COLOR: '#0C1559',
     CALENDAR_BLUE: '#89CFF0',
-    CALENDAR_HIGHLIGHT: '#FF9800',
+    CALENDAR_HIGHLIGHT: '#00223D',
     CALENDAR_RANGE: '#C3E2F1',
     NAVY_TEXT: '#00223D',
 };
@@ -285,10 +285,12 @@ const DashboardMyPlansScreen = () => {
                     />
                 </View>
 
-                {/* Start Planning Button */}
-                <TouchableOpacity style={styles.planningButton} onPress={handleStartPlanning}>
-                    <Text style={styles.planningButtonText}>Start planning</Text>
-                </TouchableOpacity>
+                {/* Start Planning Button (Wrapped in a View to push it right) */}
+                <View style={styles.planningButtonWrapper}>
+                    <TouchableOpacity style={styles.planningButton} onPress={handleStartPlanning}>
+                        <Text style={styles.planningButtonText}>Start planning</Text>
+                    </TouchableOpacity>
+                </View>
 
             </ScrollView>
 
@@ -326,7 +328,7 @@ const styles = StyleSheet.create({
     },
     headerImage: {
         width: screenWidth,
-        height: 150,
+        height: 200,
         marginBottom: 20,
         justifyContent: 'center',
         alignItems: 'center',
@@ -337,7 +339,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,34,61,0.2)',
     },
     planTitle: {
-        fontSize: 22,
+        fontSize: 18,
         fontFamily: 'Karma-Bold',
         color: COLORS.NAVY_BLUE,
         marginBottom: 15,
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     inputLabel: {
-        fontSize: 14,
+        fontSize: 18,
         color: COLORS.NAVY_BLUE,
         marginBottom: 5,
         fontFamily: 'Karma-SemiBold',
@@ -387,17 +389,26 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginTop: 6,
     },
-    planningButton: {
+
+    planningButtonWrapper: {
         width: '100%',
-        backgroundColor: COLORS.NAVY_BLUE,
-        paddingVertical: 15,
-        borderRadius: 8,
-        alignItems: 'center',
+        alignItems: 'flex-end', 
         marginBottom: 20, 
+    },
+
+    planningButton: {
+        width: 159, 
+        height: 44, 
+        backgroundColor: COLORS.NAVY_BLUE,
+        paddingVertical: 0, 
+        borderRadius: 8,
+        justifyContent: 'center', 
+        alignItems: 'center',
     },
     planningButtonText: {
         color: COLORS.WHITE,
-        fontSize: 18,
+        fontSize: 16,
+        fontFamily: 'Karma-Bold',
         fontWeight: '700',
     },
     // Modal Styles
