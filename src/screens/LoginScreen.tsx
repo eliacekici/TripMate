@@ -32,7 +32,6 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [wrongPassword, setWrongPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigateToSignUp = () => {
@@ -41,15 +40,14 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     setErrorMessage('');
-    setWrongPassword(false);
     setLoading(true);
 
     try {
       const response = await fetch('http://192.168.1.96:5000/api/auth/login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email, password }),
-});
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await response.json();
 
@@ -57,8 +55,10 @@ const LoginScreen = () => {
         if (data.message === 'NO_USER') {
           setErrorMessage('No account registered with this email.');
         } else if (data.message === 'WRONG_PASSWORD') {
-          setErrorMessage('Incorrect password.');
-          setWrongPassword(true);
+          // ⚠️ UPDATED ERROR MESSAGE FOR WRONG PASSWORD
+          setErrorMessage(
+            "Incorrect password. Don't remember your password? You could create a new account. "
+          );
         } else {
           setErrorMessage('Login failed. Try again.');
         }
@@ -68,7 +68,7 @@ const LoginScreen = () => {
 
       // ✅ LOGIN SUCCESS
       console.log('Logged in user:', data.user);
-      // navigation.replace('HomeScreen');
+      navigation.replace('DashboardMyPlansScreen');
 
     } catch (error) {
       setErrorMessage('Something went wrong. Please try again.');
@@ -77,10 +77,12 @@ const LoginScreen = () => {
     }
   };
 
+  // Check if the current error message is the one that requires the 'Sign Up' link
+  const isWrongPasswordError = errorMessage.startsWith('Incorrect password');
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-
         {/* Tabs */}
         <View style={styles.tabContainer}>
           <TouchableOpacity style={styles.inactiveTab} onPress={navigateToSignUp}>
@@ -120,17 +122,22 @@ const LoginScreen = () => {
           />
 
           {errorMessage !== '' && (
-            <Text style={styles.errorText}>{errorMessage}</Text>
+            <View style={styles.errorTextContainer}>
+              <Text style={styles.errorText}>
+                {/* Display the main error message */}
+                {errorMessage}
+                
+                {/* Conditionally display the 'Sign Up' link for the wrong password error */}
+                {isWrongPasswordError && (
+                  <Text style={styles.signUpLinkText} onPress={navigateToSignUp}>
+                    Sign Up
+                  </Text>
+                )}
+              </Text>
+            </View>
           )}
 
-          {wrongPassword && (
-            <TouchableOpacity
-              style={styles.forgotPasswordButton}
-              onPress={() => console.log('Forgot password')}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot password?</Text>
-            </TouchableOpacity>
-          )}
+          {/* ❌ REMOVED 'Forgot Password' button */}
         </View>
 
         {/* Login Button */}
@@ -151,7 +158,6 @@ const LoginScreen = () => {
             <Text style={styles.loginLink}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-
       </View>
     </SafeAreaView>
   );
@@ -228,16 +234,19 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
+  errorTextContainer: {
+    marginBottom: 10,
+    // Align error text to the left
+    alignItems: 'flex-start', 
+    width: '100%',
+  },
   errorText: {
     color: 'red',
     fontSize: 14,
-    marginBottom: 10,
   },
-
-  forgotPasswordButton: {
-    alignSelf: 'flex-end',
-  },
-  forgotPasswordText: {
+  
+  // New style for the embedded 'Sign Up' link within the error message
+  signUpLinkText: {
     color: COLORS.NAVY_BLUE,
     fontWeight: 'bold',
     textDecorationLine: 'underline',
