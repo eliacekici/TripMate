@@ -69,12 +69,30 @@ export const styles = StyleSheet.create({
         marginBottom: 30,
         alignItems: 'flex-start',
     },
+    
+    monthSelectorRow: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+    },
+
     monthSelector: {
         flexDirection: 'column',
         alignItems: 'flex-start',
         paddingVertical: 5,
-        marginBottom: 12,
-        width: '100%',
+    },
+    
+    monthChangeButton: {
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+    },
+  
+    monthChangeButtonText: {
+        fontSize: 24,
+        color: COLORS.NAVY_BLUE,
+        fontWeight: 'bold',
     },
     monthSelectorText: {
         fontSize: 18,
@@ -144,6 +162,7 @@ export const gridStyles = StyleSheet.create({
         backgroundColor: COLORS.LIGHT_BLUE_BACKGROUND,
         borderRadius: 10,
         padding: 10,
+        marginBottom: 20, 
         borderWidth: 1,
         borderColor: COLORS.BORDER_COLOR,
     },

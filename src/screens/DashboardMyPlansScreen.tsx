@@ -5,9 +5,6 @@ import {
     TouchableOpacity,
     TextInput,
     ImageBackground,
-    Modal,
-    Platform,
-    Button,
     Alert,
     StyleProp,
     ViewStyle,
@@ -16,13 +13,13 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 import AppFooter, { RootStackParamList } from './AppFooter';
 import { styles, gridStyles, COLORS } from './DashboardMyPlans.styles';
+
 
 interface NominatimResult {
     display_name: string;
@@ -32,10 +29,6 @@ interface NominatimResult {
     importance?: number;
 }
 
-interface TripPlanResponse {
-    success: boolean;
-    message?: string;
-}
 
 type NavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -61,12 +54,14 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 }) => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+    
     const daysInMonth = new Date(
         currentMonthYear.getFullYear(),
         currentMonthYear.getMonth() + 1,
         0
     ).getDate();
 
+    
     const firstDayOfMonth = new Date(
         currentMonthYear.getFullYear(),
         currentMonthYear.getMonth(),
@@ -76,24 +71,29 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     const renderGridItems = () => {
         const items = [];
 
+        // Add empty boxes for the days before the 1st of the month
         for (let i = 0; i < firstDayOfMonth; i++) {
             items.push(<View key={`empty-${i}`} style={gridStyles.dateBoxWrapper} />);
         }
 
+        // Add the day boxes for the current month
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(
                 currentMonthYear.getFullYear(),
                 currentMonthYear.getMonth(),
                 day
             );
+            // Reset hours, minutes, seconds for accurate comparison
+            date.setHours(0, 0, 0, 0);
 
             const isStart = startDate?.toDateString() === date.toDateString();
             const isEnd = endDate?.toDateString() === date.toDateString();
             const isInRange =
                 startDate &&
                 endDate &&
-                date > startDate &&
-                date < endDate;
+                // Check if date is strictly between start and end
+                date.getTime() > startDate.getTime() && 
+                date.getTime() < endDate.getTime();
 
             let boxStyle: StyleProp<ViewStyle> = [
                 gridStyles.dateBoxBase,
@@ -102,9 +102,11 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
             let textStyle: StyleProp<TextStyle> = gridStyles.dateBoxText;
 
             if (isStart || isEnd) {
+                // Style for start/end date
                 boxStyle = [gridStyles.dateBoxBase, gridStyles.dateBoxSelected];
                 textStyle = gridStyles.dateBoxTextSelected;
             } else if (isInRange) {
+                // Style for dates between start and end
                 boxStyle = [gridStyles.dateBoxBase, gridStyles.dateBoxInRange];
             }
 
@@ -147,9 +149,11 @@ const DashboardMyPlansScreen = () => {
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
 
-    const [currentMonthYear, setCurrentMonthYear] = useState(new Date());
-    const [pickerValue, setPickerValue] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
+    // Initial state set to the first day of the current month
+    const [currentMonthYear, setCurrentMonthYear] = useState(
+        new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+    );
+    
 
     const [destinationError, setDestinationError] = useState('');
     const [validatingDestination, setValidatingDestination] = useState(false);
@@ -157,8 +161,24 @@ const DashboardMyPlansScreen = () => {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
+        // Fetch userId on component mount
         AsyncStorage.getItem('userId').then(setUserId);
     }, []);
+    
+    // Helper function to navigate to the previous month
+    const goToPreviousMonth = () => {
+        const newDate = new Date(currentMonthYear.getTime());
+        newDate.setMonth(newDate.getMonth() - 1);
+        setCurrentMonthYear(newDate);
+    };
+
+    // Helper function to navigate to the next month
+    const goToNextMonth = () => {
+        const newDate = new Date(currentMonthYear.getTime());
+        newDate.setMonth(newDate.getMonth() + 1);
+        setCurrentMonthYear(newDate);
+    };
+
 
     const formatDate = (date: Date | null) =>
         date
@@ -167,50 +187,104 @@ const DashboardMyPlansScreen = () => {
                   day: 'numeric',
                   year: 'numeric',
               })
-            : 'N/A';
-
+            : 'Select on calendar';
+            
+   
+    const GENERIC_NOUN_BLACKLIST = [
+        'table', 'chair', 'flower', 'clothes', 'bottle', 'car', 'tree', 'house', 'water', 'food',
+        'book', 'pen', 'paper', 'computer', 'phone'
+    ];
+            
+    // Strict types, increased importance score, and added blacklist.
     const validateDestinationWithNominatim = async (query: string) => {
+        const normalizedQuery = query.trim().toLowerCase();
+        
+        // 0. Blacklist Check
+        if (GENERIC_NOUN_BLACKLIST.includes(normalizedQuery)) {
+            console.log(`Rejected query: ${query} (Blacklisted noun)`);
+            return false;
+        }
+
+        // Minimum query length check for efficiency
+        if (normalizedQuery.length < 3) return false; 
+        
         try {
             const res = await fetch(
                 `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
                     query
-                )}&limit=1`,
+                )}&limit=5`, 
                 {
                     headers: { 'User-Agent': 'TripMateApp/1.0' },
                 }
             );
 
             if (!res.ok) return false;
-            const [top] = (await res.json()) as NominatimResult[];
-            if (!top?.lat || !top?.lon) return false;
+            const results = (await res.json()) as NominatimResult[];
 
-           return (
-        (top.importance !== undefined && top.importance >= 0.3) ||
-        ['city', 'town', 'village', 'country'].includes(top.type)
-    );
+            if (results.length === 0) return false;
+
+            // Define STRICTLY acceptable administrative types related to travel/planning.
+            const MAJOR_DESTINATION_TYPES = [
+                'country', 
+                'state', 
+                'province', 
+                'city', 
+                'town', 
+                'capital',
+                'airport',
+            ];
+
+            // Check if ANY of the top results qualify as a major travel destination
+            const isValidDestination = results.some(top => {
+                // Ensure coordinates exist
+                if (!top?.lat || !top?.lon) return false;
+
+                // 1. Check if the type matches one of the STRICT travel/admin types
+                const isMajorType = MAJOR_DESTINATION_TYPES.includes(top.type);
+                
+                // 2. Check for substantial importance (score >= 0.5) 
+                const hasSubstantialImportance = (top.importance !== undefined && top.importance >= 0.5);
+                
+                return isMajorType || hasSubstantialImportance;
+            });
+
+            return isValidDestination;
+
         } catch {
             return false;
         }
     };
 
+    // Date selection logic (corrected for better clarity and range handling)
     const handleDayPress = (_: number, date: Date) => {
+        date.setHours(0, 0, 0, 0);
+
+        // Case 1: No start date selected yet -> set as start date
         if (!startDate) {
             setStartDate(date);
             setEndDate(null);
             return;
         }
+        
+        // Case 2: Start date is selected, but no end date
         if (!endDate) {
-            if (date < startDate) {
+            if (date.getTime() < startDate.getTime()) {
                 setStartDate(date);
                 return;
             }
+            
+            // If the selected date is the same as the start date, clear the selection
             if (date.toDateString() === startDate.toDateString()) {
                 setStartDate(null);
                 return;
             }
+            
+            // If the selected date is after the start date, set it as the end date
             setEndDate(date);
             return;
         }
+
+        // Case 3: Both start and end dates are selected (reset the range)
         setStartDate(date);
         setEndDate(null);
     };
@@ -230,13 +304,25 @@ const DashboardMyPlansScreen = () => {
         setValidatingDestination(false);
 
         if (!valid) {
-            setDestinationError('Invalid destination.');
+            // Updated error message for clarity
+            setDestinationError('Invalid destination. Please enter a city, country, or major travel spot.');
             return;
         }
 
+        // Simulating trip saving successful
         Alert.alert(
             'Trip Saved!',
-            `${destination}\n${formatDate(startDate)} – ${formatDate(endDate)}`
+            `Destination: ${destination}\nDates: ${formatDate(
+                startDate
+            )} – ${formatDate(endDate)}`
+        );
+        
+        // Reset form after successful planning
+        setDestination('');
+        setStartDate(null);
+        setEndDate(null);
+        setCurrentMonthYear(
+            new Date(new Date().getFullYear(), new Date().getMonth(), 1)
         );
     };
 
@@ -264,28 +350,36 @@ const DashboardMyPlansScreen = () => {
                     )}
                 </View>
 
-                <TouchableOpacity
-                    style={styles.monthSelector}
-                    onPress={() => {
-                        if (!showDatePicker) {
-                            setPickerValue(currentMonthYear);
-                            setShowDatePicker(true);
-                        }
-                    }}
-                >
-                    <Text style={styles.monthSelectorText}>
-                        {currentMonthYear.toLocaleDateString('en-US', {
-                            month: 'long',
-                            year: 'numeric',
-                        })}
-                    </Text>
-                    <Text style={styles.selectionPrompt}>
-                        Start: {formatDate(startDate)}
-                    </Text>
-                    <Text style={styles.selectionPrompt}>
-                        End: {formatDate(endDate)}
-                    </Text>
-                </TouchableOpacity>
+                <View style={styles.monthSelectorRow}>
+                    <TouchableOpacity 
+                        onPress={goToPreviousMonth} 
+                        style={styles.monthChangeButton}
+                    >
+                        <Text style={styles.monthChangeButtonText}>{'<'}</Text>
+                    </TouchableOpacity>
+                    
+                    <View style={styles.monthSelector}>
+                        <Text style={styles.monthSelectorText}>
+                            {currentMonthYear.toLocaleDateString('en-US', {
+                                month: 'long',
+                                year: 'numeric',
+                            })}
+                        </Text>
+                        <Text style={styles.selectionPrompt}>
+                            Start: {formatDate(startDate)}
+                        </Text>
+                        <Text style={styles.selectionPrompt}>
+                            End: {formatDate(endDate)}
+                        </Text>
+                    </View>
+                    
+                    <TouchableOpacity 
+                        onPress={goToNextMonth} 
+                        style={styles.monthChangeButton}
+                    >
+                        <Text style={styles.monthChangeButtonText}>{'>'}</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <CalendarGrid
                     currentMonthYear={currentMonthYear}
@@ -297,57 +391,13 @@ const DashboardMyPlansScreen = () => {
                 <TouchableOpacity
                     style={styles.planningButton}
                     onPress={handleStartPlanning}
+                    disabled={validatingDestination} 
                 >
-                    <Text style={styles.planningButtonText}>Start planning</Text>
+                    <Text style={styles.planningButtonText}>
+                        {validatingDestination ? 'Validating...' : 'Start planning'}
+                    </Text>
                 </TouchableOpacity>
             </ScrollView>
-
-            {/* ✅ FIXED MODAL */}
-            <Modal
-                transparent
-                animationType="slide"
-                visible={showDatePicker}
-                onRequestClose={() => setShowDatePicker(false)}
-            >
-                <TouchableOpacity
-                    style={styles.centeredView}
-                    activeOpacity={1}
-                    onPress={() => setShowDatePicker(false)}
-                >
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        style={styles.modalView}
-                        onPress={() => {}}
-                    >
-                        <DateTimePicker
-                            value={pickerValue}
-                            mode="date"
-                            // CHANGE THIS LINE: Forces the picker to render inline, 
-                            // making the 'Done' button visible and functional alongside it.
-                            display="spinner" 
-                            onChange={(_, d) => d && setPickerValue(d)}
-                        />
-
-                        <View style={{ marginTop: 20 }}>
-                        <Button
-                            title="Done"
-                            onPress={() => {
-                                setCurrentMonthYear(
-                                    new Date(
-                                        pickerValue.getFullYear(),
-                                        pickerValue.getMonth(),
-                                        1
-                                    )
-                                );
-                                // This line will now be reached and close the surrounding Modal.
-                                setShowDatePicker(false); 
-                            }}
-                        />
-                    </View>
-                    </TouchableOpacity>
-                </TouchableOpacity>
-            </Modal>
-
             <AppFooter
                 activeScreen="DashboardMyPlansScreen"
                 navigation={navigation as any}
