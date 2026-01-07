@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    StyleSheet,
     TouchableOpacity,
     TextInput,
-    Dimensions,
     ImageBackground,
     Modal,
     Platform,
@@ -21,81 +19,97 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import AppFooter, { RootStackParamList } from './AppFooter';
+import { styles, gridStyles, COLORS } from './DashboardMyPlans.styles';
 
-// --- TYPE DEFINITIONS ---
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'DashboardMyPlansScreen'>;
+interface NominatimResult {
+    display_name: string;
+    lat: string;
+    lon: string;
+    type: string;
+    importance?: number;
+}
+
+interface TripPlanResponse {
+    success: boolean;
+    message?: string;
+}
+
+type NavigationProp = NativeStackNavigationProp<
+    RootStackParamList,
+    'DashboardMyPlansScreen'
+>;
 
 const HeaderImagePlaceholder = require('../assets/images/header_image_placeholder.png');
 
-const { width: screenWidth } = Dimensions.get('window');
+/* -------------------- CALENDAR GRID -------------------- */
 
-// --- COLORS ---
-const COLORS = {
-    NAVY_BLUE: '#00223D',
-    LIGHT_BLUE_BACKGROUND: '#E0F2FE',
-    INPUT_FIELD: '#C3E2F1',
-    WHITE: '#FFFFFF',
-    DARK_TEXT: '#000000',
-    GRAY_TEXT: '#888888',
-    BORDER_COLOR: '#0C1559',
-    CALENDAR_BLUE: '#89CFF0',
-    CALENDAR_HIGHLIGHT: '#00223D',
-    CALENDAR_RANGE: '#C3E2F1',
-    NAVY_TEXT: '#00223D',
-};
-
-// --- CALENDAR GRID VISUAL ---
 interface CalendarGridProps {
     currentMonthYear: Date;
     startDate: Date | null;
     endDate: Date | null;
-    onDayPress: (dayOfMonth: number, date: Date) => void;
+    onDayPress: (day: number, date: Date) => void;
 }
 
-const CalendarGrid: React.FC<CalendarGridProps> = ({ currentMonthYear, startDate, endDate, onDayPress }) => {
-
+const CalendarGrid: React.FC<CalendarGridProps> = ({
+    currentMonthYear,
+    startDate,
+    endDate,
+    onDayPress,
+}) => {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const daysInMonth = new Date(currentMonthYear.getFullYear(), currentMonthYear.getMonth() + 1, 0).getDate();
-    const firstDayOfMonth = new Date(currentMonthYear.getFullYear(), currentMonthYear.getMonth(), 1).getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+    const daysInMonth = new Date(
+        currentMonthYear.getFullYear(),
+        currentMonthYear.getMonth() + 1,
+        0
+    ).getDate();
+
+    const firstDayOfMonth = new Date(
+        currentMonthYear.getFullYear(),
+        currentMonthYear.getMonth(),
+        1
+    ).getDay();
 
     const renderGridItems = () => {
         const items = [];
 
-        // --- Placeholders before the first day ---
         for (let i = 0; i < firstDayOfMonth; i++) {
-            items.push(
-                <View key={`empty-${i}`} style={gridStyles.dateBoxWrapper} />
-            );
+            items.push(<View key={`empty-${i}`} style={gridStyles.dateBoxWrapper} />);
         }
 
-        // --- Actual days ---
         for (let day = 1; day <= daysInMonth; day++) {
-            const date = new Date(currentMonthYear.getFullYear(), currentMonthYear.getMonth(), day);
-            const dateTimestamp = date.getTime();
+            const date = new Date(
+                currentMonthYear.getFullYear(),
+                currentMonthYear.getMonth(),
+                day
+            );
 
-            const isSelectedStart = startDate && date.toDateString() === startDate.toDateString();
-            const isSelectedEnd = endDate && date.toDateString() === endDate.toDateString();
+            const isStart = startDate?.toDateString() === date.toDateString();
+            const isEnd = endDate?.toDateString() === date.toDateString();
+            const isInRange =
+                startDate &&
+                endDate &&
+                date > startDate &&
+                date < endDate;
 
-            const isInRange = startDate && endDate
-                && dateTimestamp > startDate.getTime()
-                && dateTimestamp < endDate.getTime();
-
-            let boxStyle: StyleProp<ViewStyle>;
+            let boxStyle: StyleProp<ViewStyle> = [
+                gridStyles.dateBoxBase,
+                gridStyles.dateBoxDefault,
+            ];
             let textStyle: StyleProp<TextStyle> = gridStyles.dateBoxText;
 
-            if (isSelectedStart || isSelectedEnd) {
+            if (isStart || isEnd) {
                 boxStyle = [gridStyles.dateBoxBase, gridStyles.dateBoxSelected];
                 textStyle = gridStyles.dateBoxTextSelected;
             } else if (isInRange) {
                 boxStyle = [gridStyles.dateBoxBase, gridStyles.dateBoxInRange];
-            } else {
-                boxStyle = [gridStyles.dateBoxBase, gridStyles.dateBoxDefault];
             }
 
             items.push(
-                <View key={`day-wrapper-${day}`} style={gridStyles.dateBoxWrapper}>
+                <View key={day} style={gridStyles.dateBoxWrapper}>
                     <TouchableOpacity
                         style={boxStyle}
                         onPress={() => onDayPress(day, date)}
@@ -107,402 +121,239 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({ currentMonthYear, startDate
             );
         }
 
-        // --- Placeholders after last day (Optional: ensures grid stays square) ---
-        const totalCellsNeeded = firstDayOfMonth + daysInMonth;
-        const totalSlots = Math.ceil(totalCellsNeeded / 7) * 7;
-        const remainingSlots = totalSlots - items.length;
-
-        for (let i = 0; i < remainingSlots; i++) {
-            items.push(
-                <View key={`empty-after-${i}`} style={gridStyles.dateBoxWrapper} />
-            );
-        }
-
         return items;
     };
 
     return (
         <View style={gridStyles.calendarContainer}>
-            {/* Day Headers */}
             <View style={gridStyles.dayHeaderRow}>
-                {daysOfWeek.map((day, index) => (
-                    <View key={index} style={gridStyles.dayHeaderWrapper}>
+                {daysOfWeek.map(day => (
+                    <View key={day} style={gridStyles.dayHeaderWrapper}>
                         <Text style={gridStyles.dayHeaderText}>{day}</Text>
                     </View>
                 ))}
             </View>
-
-            {/* Grid of Boxes */}
-            <View style={gridStyles.gridRow}>
-                {renderGridItems()}
-            </View>
+            <View style={gridStyles.gridRow}>{renderGridItems()}</View>
         </View>
     );
 };
 
-// --- SCREEN COMPONENT ---
-const DashboardMyPlansScreen = () => {
+/* -------------------- MAIN SCREEN -------------------- */
 
+const DashboardMyPlansScreen = () => {
     const navigation = useNavigation<NavigationProp>();
 
     const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
-    const [showDatePicker, setShowDatePicker] = useState(false);
-    const [currentPickerValue, setCurrentPickerValue] = useState<Date>(new Date());
-    const [currentMonthYear, setCurrentMonthYear] = useState(new Date());
 
-    // --- Handle day selection ---
-    const handleDaySelection = (_day: number, selectedDate: Date) => {
+    const [currentMonthYear, setCurrentMonthYear] = useState(new Date());
+    const [pickerValue, setPickerValue] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const [destinationError, setDestinationError] = useState('');
+    const [validatingDestination, setValidatingDestination] = useState(false);
+
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        AsyncStorage.getItem('userId').then(setUserId);
+    }, []);
+
+    const formatDate = (date: Date | null) =>
+        date
+            ? date.toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+              })
+            : 'N/A';
+
+    const validateDestinationWithNominatim = async (query: string) => {
+        try {
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                    query
+                )}&limit=1`,
+                {
+                    headers: { 'User-Agent': 'TripMateApp/1.0' },
+                }
+            );
+
+            if (!res.ok) return false;
+            const [top] = (await res.json()) as NominatimResult[];
+            if (!top?.lat || !top?.lon) return false;
+
+           return (
+        (top.importance !== undefined && top.importance >= 0.3) ||
+        ['city', 'town', 'village', 'country'].includes(top.type)
+    );
+        } catch {
+            return false;
+        }
+    };
+
+    const handleDayPress = (_: number, date: Date) => {
         if (!startDate) {
-            setStartDate(selectedDate);
+            setStartDate(date);
             setEndDate(null);
             return;
         }
-        if (startDate && !endDate) {
-            if (selectedDate.getTime() < startDate.getTime()) {
-                setStartDate(selectedDate);
-                setEndDate(null);
-            } else if (selectedDate.toDateString() === startDate.toDateString()) {
-                setStartDate(null);
-                setEndDate(null);
-            } else {
-                setEndDate(selectedDate);
+        if (!endDate) {
+            if (date < startDate) {
+                setStartDate(date);
+                return;
             }
+            if (date.toDateString() === startDate.toDateString()) {
+                setStartDate(null);
+                return;
+            }
+            setEndDate(date);
             return;
         }
-        setStartDate(selectedDate);
+        setStartDate(date);
         setEndDate(null);
     };
 
-    // --- Handle month/year picker ---
-    const handleDateChange = (event: any, selectedDate?: Date) => {
-        if (Platform.OS === 'android') setShowDatePicker(false);
-
-        if (selectedDate) {
-            const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-            setCurrentMonthYear(newDate);
-        }
-    };
-
-    const openMonthYearPicker = () => {
-        setCurrentPickerValue(currentMonthYear);
-        setShowDatePicker(true);
-    };
-
-    const handleStartPlanning = () => {
-        if (!destination || !startDate || !endDate) {
-            Alert.alert("Missing Information", "Please fill in destination and select both a start date and an end date on the calendar.");
+    const handleStartPlanning = async () => {
+        if (!destination.trim()) {
+            setDestinationError('Please enter a destination.');
             return;
         }
-        Alert.alert("Planning Started!", `Destination: ${destination}\nDates: ${formatDate(startDate)} - ${formatDate(endDate)}`);
-        console.log('Starting trip planning with:', { destination, startDate, endDate });
+        if (!startDate || !endDate) {
+            Alert.alert('Missing Dates', 'Please select start and end dates.');
+            return;
+        }
+
+        setValidatingDestination(true);
+        const valid = await validateDestinationWithNominatim(destination);
+        setValidatingDestination(false);
+
+        if (!valid) {
+            setDestinationError('Invalid destination.');
+            return;
+        }
+
+        Alert.alert(
+            'Trip Saved!',
+            `${destination}\n${formatDate(startDate)} – ${formatDate(endDate)}`
+        );
     };
-
-    const formatDate = (date: Date | null) => {
-        return date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
-    };
-
-    // --- Date Picker Modal for iOS ---
-    const DatePickerModal = () => (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={showDatePicker}
-            onRequestClose={() => setShowDatePicker(false)}
-        >
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalTitle}>Select Month and Year</Text>
-                    <DateTimePicker
-                        value={currentPickerValue}
-                        mode={'date'}
-                        display={'spinner'}
-                        onChange={(event, date) => {
-                            if (date) setCurrentPickerValue(date);
-                        }}
-                    />
-                    <Button
-                        title="Done"
-                        onPress={() => {
-                            // Apply the selected date to currentMonthYear when "Done" is pressed
-                            const newDate = new Date(currentPickerValue.getFullYear(), currentPickerValue.getMonth(), 1);
-                            setCurrentMonthYear(newDate);
-                            setShowDatePicker(false);
-                        }}
-                    />
-                </View>
-            </View>
-        </Modal>
-    );
-
-    const displayCurrentMonth = currentMonthYear.toLocaleDateString('en-US', { month: 'long' });
-    const displayCurrentYear = currentMonthYear.toLocaleDateString('en-US', { year: 'numeric' });
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* ScrollView for the main content */}
-            <ScrollView contentContainerStyle={styles.scrollContent} bounces={false}>
-                
-                {/* Header Photo */}
-                <ImageBackground
-                    source={HeaderImagePlaceholder}
-                    style={styles.headerImage}
-                    resizeMode="cover"
-                >
-                    <View style={styles.imageOverlay} />
-                </ImageBackground>
+            <ScrollView contentContainerStyle={styles.scrollContent}>
+                <ImageBackground source={HeaderImagePlaceholder} style={styles.headerImage} />
 
                 <Text style={styles.planTitle}>Plan your trip</Text>
 
-                {/* Traveling To Input */}
                 <View style={styles.inputRow}>
                     <Text style={styles.inputLabel}>Traveling to:</Text>
                     <TextInput
                         style={styles.textInputFull}
-                        placeholder="Enter Destination"
-                        placeholderTextColor={COLORS.DARK_TEXT}
                         value={destination}
-                        onChangeText={setDestination}
+                        onChangeText={text => {
+                            setDestination(text);
+                            setDestinationError('');
+                        }}
+                        placeholder="Paris, Rome, Japan"
+                        placeholderTextColor={COLORS.DARK_TEXT}
                     />
+                    {!!destinationError && (
+                        <Text style={styles.errorText}>{destinationError}</Text>
+                    )}
                 </View>
 
-                {/* Month Selector and Calendar */}
-                <View style={styles.calendarSection}>
-                    <TouchableOpacity style={styles.monthSelector} onPress={openMonthYearPicker}>
-                        <Text style={styles.monthSelectorText}>{`${displayCurrentMonth} ${displayCurrentYear}`}</Text>
-                        <View>
-                            <Text style={styles.selectionPrompt}>Start: {startDate ? formatDate(startDate) : 'Select start date'}</Text>
-                            <Text style={styles.selectionPrompt}>End: {endDate ? formatDate(endDate) : 'Select end date'}</Text>
-                        </View>
-                    </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.monthSelector}
+                    onPress={() => {
+                        if (!showDatePicker) {
+                            setPickerValue(currentMonthYear);
+                            setShowDatePicker(true);
+                        }
+                    }}
+                >
+                    <Text style={styles.monthSelectorText}>
+                        {currentMonthYear.toLocaleDateString('en-US', {
+                            month: 'long',
+                            year: 'numeric',
+                        })}
+                    </Text>
+                    <Text style={styles.selectionPrompt}>
+                        Start: {formatDate(startDate)}
+                    </Text>
+                    <Text style={styles.selectionPrompt}>
+                        End: {formatDate(endDate)}
+                    </Text>
+                </TouchableOpacity>
 
-                    <CalendarGrid
-                        currentMonthYear={currentMonthYear}
-                        startDate={startDate}
-                        endDate={endDate}
-                        onDayPress={handleDaySelection}
-                    />
-                </View>
+                <CalendarGrid
+                    currentMonthYear={currentMonthYear}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onDayPress={handleDayPress}
+                />
 
-                {/* Start Planning Button (Wrapped in a View to push it right) */}
-                <View style={styles.planningButtonWrapper}>
-                    <TouchableOpacity style={styles.planningButton} onPress={handleStartPlanning}>
-                        <Text style={styles.planningButtonText}>Start planning</Text>
-                    </TouchableOpacity>
-                </View>
-
+                <TouchableOpacity
+                    style={styles.planningButton}
+                    onPress={handleStartPlanning}
+                >
+                    <Text style={styles.planningButtonText}>Start planning</Text>
+                </TouchableOpacity>
             </ScrollView>
 
-            {/* Date Picker Modals */}
-            {showDatePicker && Platform.OS === 'ios' && <DatePickerModal />}
-            {showDatePicker && Platform.OS === 'android' && (
-                <DateTimePicker
-                    value={currentPickerValue}
-                    mode={'date'}
-                    display="calendar"
-                    onChange={handleDateChange}
-                />
-            )}
+            {/* ✅ FIXED MODAL */}
+            <Modal
+                transparent
+                animationType="slide"
+                visible={showDatePicker}
+                onRequestClose={() => setShowDatePicker(false)}
+            >
+                <TouchableOpacity
+                    style={styles.centeredView}
+                    activeOpacity={1}
+                    onPress={() => setShowDatePicker(false)}
+                >
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        style={styles.modalView}
+                        onPress={() => {}}
+                    >
+                        <DateTimePicker
+                            value={pickerValue}
+                            mode="date"
+                            // CHANGE THIS LINE: Forces the picker to render inline, 
+                            // making the 'Done' button visible and functional alongside it.
+                            display="spinner" 
+                            onChange={(_, d) => d && setPickerValue(d)}
+                        />
 
-            {/* App Footer (fixed at the bottom) */}
-            <AppFooter activeScreen="DashboardMyPlansScreen" navigation={navigation as any} />
+                        <View style={{ marginTop: 20 }}>
+                        <Button
+                            title="Done"
+                            onPress={() => {
+                                setCurrentMonthYear(
+                                    new Date(
+                                        pickerValue.getFullYear(),
+                                        pickerValue.getMonth(),
+                                        1
+                                    )
+                                );
+                                // This line will now be reached and close the surrounding Modal.
+                                setShowDatePicker(false); 
+                            }}
+                        />
+                    </View>
+                    </TouchableOpacity>
+                </TouchableOpacity>
+            </Modal>
+
+            <AppFooter
+                activeScreen="DashboardMyPlansScreen"
+                navigation={navigation as any}
+            />
         </SafeAreaView>
     );
 };
 
 export default DashboardMyPlansScreen;
-
-// --- STYLES ---
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: COLORS.LIGHT_BLUE_BACKGROUND,
-        
-    },
-    // Style applied to the ScrollView content area
-    scrollContent: {
-        paddingHorizontal: 20,
-        paddingBottom: 100, 
-        alignItems: 'center',
-    },
-    headerImage: {
-        width: screenWidth,
-        height: 200,
-        marginBottom: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: -20,
-    },
-    imageOverlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: 'rgba(0,34,61,0.2)',
-    },
-    planTitle: {
-        fontSize: 18,
-        fontFamily: 'Karma-Bold',
-        color: COLORS.NAVY_BLUE,
-        marginBottom: 15,
-    },
-    inputRow: {
-        width: '100%',
-        marginBottom: 20,
-    },
-    inputLabel: {
-        fontSize: 18,
-        color: COLORS.NAVY_BLUE,
-        marginBottom: 5,
-        fontFamily: 'Karma-SemiBold',
-    },
-    textInputFull: {
-        width: '100%',
-        height: 40,
-        backgroundColor: COLORS.INPUT_FIELD,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: COLORS.BORDER_COLOR,
-        color: COLORS.DARK_TEXT,
-    },
-    calendarSection: {
-        width: '100%',
-        marginBottom: 30, 
-        alignItems: 'flex-start',
-    },
-    monthSelector: {
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        paddingVertical: 5,
-        marginBottom: 12,
-        width: '100%',
-        justifyContent: 'space-between',
-    },
-    monthSelectorText: {
-        fontSize: 18,
-        fontFamily: 'Karma-Bold',
-        color: COLORS.NAVY_TEXT,
-        marginRight: 8,
-    },
-    selectionPrompt: {
-        fontSize: 14,
-        color: COLORS.NAVY_TEXT,
-        fontWeight: '600',
-        marginTop: 6,
-    },
-
-    planningButtonWrapper: {
-        width: '100%',
-        alignItems: 'flex-end', 
-        marginBottom: 20, 
-    },
-
-    planningButton: {
-        width: 159, 
-        height: 44, 
-        backgroundColor: COLORS.NAVY_BLUE,
-        paddingVertical: 0, 
-        borderRadius: 8,
-        justifyContent: 'center', 
-        alignItems: 'center',
-    },
-    planningButtonText: {
-        color: COLORS.WHITE,
-        fontSize: 16,
-        fontFamily: 'Karma-Bold',
-        fontWeight: '700',
-    },
-    // Modal Styles
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
-    modalTitle: {
-        fontSize: 18,
-        marginBottom: 15,
-        fontFamily: 'Karma-Bold',
-        color: COLORS.NAVY_BLUE,
-    },
-});
-
-// --- CALENDAR GRID STYLES (Finalized) ---
-const gridStyles = StyleSheet.create({
-    calendarContainer: {
-        width: '100%',
-        backgroundColor: COLORS.WHITE,
-        borderRadius: 10,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: COLORS.BORDER_COLOR,
-    },
-    dayHeaderRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 5,
-    },
-    dayHeaderWrapper: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    dayHeaderText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: COLORS.DARK_TEXT,
-        paddingVertical: 5,
-    },
-    gridRow: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-    },
-    dateBoxWrapper: {
-        width: `${100 / 7}%`,
-        aspectRatio: 1,
-        padding: 2,
-    },
-
-    dateBoxBase: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 8,
-    },
-
-    dateBoxDefault: {
-        backgroundColor: COLORS.CALENDAR_BLUE,
-    },
-    dateBoxSelected: {
-        backgroundColor: COLORS.CALENDAR_HIGHLIGHT,
-        borderWidth: 2,
-        borderColor: COLORS.NAVY_TEXT,
-    },
-    dateBoxInRange: {
-        backgroundColor: COLORS.CALENDAR_RANGE,
-    },
-
-    dateBoxText: {
-        fontSize: 14,
-        color: COLORS.NAVY_TEXT,
-    },
-    dateBoxTextSelected: {
-        color: COLORS.WHITE,
-        fontWeight: 'bold',
-    },
-});
