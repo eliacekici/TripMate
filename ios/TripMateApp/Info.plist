@@ -56,6 +56,26 @@
 		<string>Karma-Medium.ttf</string>
 		<string>Karma-Regular.ttf</string>
 		<string>Karma-SemiBold.ttf</string>
+		<string>Labrada-Black.ttf</string>
+		<string>Labrada-BlackItalic.ttf</string>
+		<string>Labrada-Bold.ttf</string>
+		<string>Labrada-BoldItalic.ttf</string>
+		<string>Labrada-ExtraBold.ttf</string>
+		<string>Labrada-ExtraBoldItalic.ttf</string>
+		<string>Labrada-ExtraLight.ttf</string>
+		<string>Labrada-ExtraLightItalic.ttf</string>
+		<string>Labrada-Italic-VariableFont_wght.ttf</string>
+		<string>Labrada-Italic.ttf</string>
+		<string>Labrada-Light.ttf</string>
+		<string>Labrada-LightItalic.ttf</string>
+		<string>Labrada-Medium.ttf</string>
+		<string>Labrada-MediumItalic.ttf</string>
+		<string>Labrada-Regular.ttf</string>
+		<string>Labrada-SemiBold.ttf</string>
+		<string>Labrada-SemiBoldItalic.ttf</string>
+		<string>Labrada-Thin.ttf</string>
+		<string>Labrada-ThinItalic.ttf</string>
+		<string>Labrada-VariableFont_wght.ttf</string>
 	</array>
 </dict>
 </plist>

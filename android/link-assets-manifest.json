@@ -2,28 +2,116 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/Karma/Karma-Bold.ttf",
+      "path": "src/assets/fonts/Karma/OFL.txt",
+      "sha1": "f0c490b6a85274b4b5115f462aac1bb8ace48770"
+    },
+    {
+      "path": "src/assets/fonts/Karma-Bold.ttf",
       "sha1": "0ccc94d445ee1a55ab4d2a08ebd277bf4ebc02b2"
     },
     {
-      "path": "src/assets/fonts/Karma/Karma-Light.ttf",
+      "path": "src/assets/fonts/Karma-Light.ttf",
       "sha1": "f315dd348db03a137a0f7f8211c9e42f58c8af87"
     },
     {
-      "path": "src/assets/fonts/Karma/Karma-Medium.ttf",
+      "path": "src/assets/fonts/Karma-Medium.ttf",
       "sha1": "074474c2a10018caa23b17cc5f025ebd2a37f43d"
     },
     {
-      "path": "src/assets/fonts/Karma/Karma-Regular.ttf",
+      "path": "src/assets/fonts/Karma-Regular.ttf",
       "sha1": "9dab238c6b33ad1de25df6ba75e62331788c5162"
     },
     {
-      "path": "src/assets/fonts/Karma/Karma-SemiBold.ttf",
+      "path": "src/assets/fonts/Karma-SemiBold.ttf",
       "sha1": "5ce0d230ad01425eb49ccb67e13864bc6c1865fc"
     },
     {
-      "path": "src/assets/fonts/Karma/OFL.txt",
-      "sha1": "f0c490b6a85274b4b5115f462aac1bb8ace48770"
+      "path": "src/assets/fonts/Labrada/Labrada-Italic-VariableFont_wght.ttf",
+      "sha1": "175495096b4e171ea8af44c129b0f6580acae186"
+    },
+    {
+      "path": "src/assets/fonts/Labrada/Labrada-VariableFont_wght.ttf",
+      "sha1": "f1285f7399c3705ba91c61c3e3c7441099112a01"
+    },
+    {
+      "path": "src/assets/fonts/Labrada/OFL.txt",
+      "sha1": "8b0a226449de9fd2cc6198fd97a040fb7338e0b7"
+    },
+    {
+      "path": "src/assets/fonts/Labrada/README.txt",
+      "sha1": "615fc6244788fc0100bd29994809dec82fa3c668"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Black.ttf",
+      "sha1": "2d6b991081238ccdede46cbba59a0a7a61dec68e"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-BlackItalic.ttf",
+      "sha1": "6ebceadcd4fca55374165ec8292de1602bc1f5db"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Bold.ttf",
+      "sha1": "57456682b2cb96f6efc6e23962779df235476ac4"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-BoldItalic.ttf",
+      "sha1": "4e51bab2638e410a2d70f8ffcc3865ffe56a081e"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-ExtraBold.ttf",
+      "sha1": "13b35a1d7fa3b06862705e01f25802444adecc53"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-ExtraBoldItalic.ttf",
+      "sha1": "e893e0fd56e8b4de8ee7af084c4ce6bde7d5d00e"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-ExtraLight.ttf",
+      "sha1": "86d86b4ae286645a6303474c05689db341e51e33"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-ExtraLightItalic.ttf",
+      "sha1": "06440bc7d4bfaa688ec5d1a27677be78d5632fd5"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Italic.ttf",
+      "sha1": "b0f68a905976cd2a70c166840e9fdbe3b28c34ab"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Light.ttf",
+      "sha1": "0e7a8e500dc5e38f6cb0e7f679288e6f2daa8c85"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-LightItalic.ttf",
+      "sha1": "92619949aef047140ad4e97890fffb187430e3fc"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Medium.ttf",
+      "sha1": "cdc005c648a0cdae312305cb2882e3f0f221f905"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-MediumItalic.ttf",
+      "sha1": "f860f84fa2ea843d523422d12be49b31d46a93e3"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Regular.ttf",
+      "sha1": "73e8b8a74c5ea561ee89f90a1cb6336266c61c36"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-SemiBold.ttf",
+      "sha1": "35fec456d88831be4bc007e5000920a2a1dde567"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-SemiBoldItalic.ttf",
+      "sha1": "0e40dccafe25537191155b6bd859c028e1151bce"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-Thin.ttf",
+      "sha1": "b329108ac24045dfa2cd8f274b14595fe3f60172"
+    },
+    {
+      "path": "src/assets/fonts/Labrada-ThinItalic.ttf",
+      "sha1": "5a10c330f8f85e4cd10afbea3fde375b8ea62172"
     }
   ]
 }

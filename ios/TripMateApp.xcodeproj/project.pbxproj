@@ -11,12 +11,34 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8DB8A29CD2CA48C3B6DC01CC /* Karma-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C8C31DCF9D0F46F697545DA6 /* Karma-Bold.ttf */; };
-		8DDCD7C153D849D0B43DA8D0 /* Karma-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E78D181D5BC4F6D9438CBBD /* Karma-Light.ttf */; };
-		E876A8B092A6460897F0505A /* Karma-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6A27B42C96D841D7B03F071D /* Karma-Medium.ttf */; };
-		E954B1457DF64B03816D1874 /* Karma-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F480C7C5C06742C3A132A0BE /* Karma-Regular.ttf */; };
-		3EBA0D8BCDC646BAA0DC011A /* Karma-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5CF671257446489AA54159F8 /* Karma-SemiBold.ttf */; };
-		E3D1FE68C51247F480292816 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = BC6B858DEBCB42E38A7AE009 /* OFL.txt */; };
+		FFAB9F516FE74272B1C1CE59 /* Karma-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AFA0B035E251430A84202820 /* Karma-Bold.ttf */; };
+		A8FB5C078F7E4A4D847C148D /* Karma-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F3F90BE09EE459C864D5B06 /* Karma-Light.ttf */; };
+		7B2F138699B24DB6B6E31C9C /* Karma-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EF9E336CAB4F49038297A11D /* Karma-Medium.ttf */; };
+		8C6EFA00CD234C889F7A67EF /* Karma-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7295879B68DA4C07B4F10ABA /* Karma-Regular.ttf */; };
+		83867072298046CC8ACD0704 /* Karma-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BF0F7CA26444C988F810E0A /* Karma-SemiBold.ttf */; };
+		5D3AAFA380DC49A5BDE8E3D8 /* Labrada-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BCCA572716304C1E917E2EBB /* Labrada-Black.ttf */; };
+		AED0541F0D7D4ED49A0B6E25 /* Labrada-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 50CA2A332E5046CBB7512F34 /* Labrada-BlackItalic.ttf */; };
+		3B4FC2A64A364DEE80A23583 /* Labrada-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA9F3DAA07FF4A00B6F2299E /* Labrada-Bold.ttf */; };
+		9A4AEC9AF213433F9942D188 /* Labrada-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA4296C9D5EC4E24A2C1E7F7 /* Labrada-BoldItalic.ttf */; };
+		E3EB3CEC3ECE4660B01DC68A /* Labrada-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 81E6774046F94D019FCECC3D /* Labrada-ExtraBold.ttf */; };
+		5E57BD6BD5374D538360B996 /* Labrada-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F57CFA4D763B469495719957 /* Labrada-ExtraBoldItalic.ttf */; };
+		24BABB30279241ECBD3A2909 /* Labrada-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DEA0CB32B8424EB0AB96D609 /* Labrada-ExtraLight.ttf */; };
+		5973B8D423CA4A4D8FAF9FCA /* Labrada-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 582225FCAB674A5BB2EA6792 /* Labrada-ExtraLightItalic.ttf */; };
+		3A1437C981F24497A3DF1399 /* Labrada-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFDDD8AC84B645989AFF1A8B /* Labrada-Italic-VariableFont_wght.ttf */; };
+		1F3E2D7111B446E08FE6E10E /* Labrada-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E17939CF252B4ED79B3838F6 /* Labrada-Italic.ttf */; };
+		F5656BC004F2484A926CDB79 /* Labrada-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9AB4CFA09D644717974559DC /* Labrada-Light.ttf */; };
+		489A8F7458134A96AB6816CE /* Labrada-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BCF18594E814A69905B79B1 /* Labrada-LightItalic.ttf */; };
+		4E716BE7A4B244E698764A6A /* Labrada-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EBE923EBCD1441E7AADAEBC4 /* Labrada-Medium.ttf */; };
+		543F65F43304487C8C0F8080 /* Labrada-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 117CC8B35A6A40DF882F0668 /* Labrada-MediumItalic.ttf */; };
+		D6B898C28B0D4834BF0644E6 /* Labrada-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30F68B56AC4A4BC7923E0742 /* Labrada-Regular.ttf */; };
+		CD732A7811D045A8B4FCE93B /* Labrada-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 257D8CD31F1A406D8526A526 /* Labrada-SemiBold.ttf */; };
+		851721F9F3464AC1AF0A8590 /* Labrada-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B244F03998D64CDA8F3F2020 /* Labrada-SemiBoldItalic.ttf */; };
+		EB6732D6B8374CA6A0BE113B /* Labrada-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE011A8951FC400DB952E2CD /* Labrada-Thin.ttf */; };
+		F197A5E1F3F84527998A4B53 /* Labrada-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E808171404A3448299BD2C91 /* Labrada-ThinItalic.ttf */; };
+		49E2C2A75273420097578151 /* Labrada-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 263EC480DE8A4EF5AEBF20C3 /* Labrada-VariableFont_wght.ttf */; };
+		754BDC177F6D47068D2A006C /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4A21AE98F1514C7CBE65123F /* OFL.txt */; };
+		D335D3EC44054DB08B38CE32 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7A3F6AB47C9D4E2A8AADA626 /* OFL.txt */; };
+		AB1639594666445EBAB0071F /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = AEB27787A52C46E3BB54B65F /* README.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,12 +52,34 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = TripMateApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = TripMateApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		C8C31DCF9D0F46F697545DA6 /* Karma-Bold.ttf */ = {isa = PBXFileReference; name = "Karma-Bold.ttf"; path = "../src/assets/fonts/Karma/Karma-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		8E78D181D5BC4F6D9438CBBD /* Karma-Light.ttf */ = {isa = PBXFileReference; name = "Karma-Light.ttf"; path = "../src/assets/fonts/Karma/Karma-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		6A27B42C96D841D7B03F071D /* Karma-Medium.ttf */ = {isa = PBXFileReference; name = "Karma-Medium.ttf"; path = "../src/assets/fonts/Karma/Karma-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F480C7C5C06742C3A132A0BE /* Karma-Regular.ttf */ = {isa = PBXFileReference; name = "Karma-Regular.ttf"; path = "../src/assets/fonts/Karma/Karma-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5CF671257446489AA54159F8 /* Karma-SemiBold.ttf */ = {isa = PBXFileReference; name = "Karma-SemiBold.ttf"; path = "../src/assets/fonts/Karma/Karma-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		BC6B858DEBCB42E38A7AE009 /* OFL.txt */ = {isa = PBXFileReference; name = "OFL.txt"; path = "../src/assets/fonts/Karma/OFL.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AFA0B035E251430A84202820 /* Karma-Bold.ttf */ = {isa = PBXFileReference; name = "Karma-Bold.ttf"; path = "../src/assets/fonts/Karma/Karma-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		6F3F90BE09EE459C864D5B06 /* Karma-Light.ttf */ = {isa = PBXFileReference; name = "Karma-Light.ttf"; path = "../src/assets/fonts/Karma/Karma-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EF9E336CAB4F49038297A11D /* Karma-Medium.ttf */ = {isa = PBXFileReference; name = "Karma-Medium.ttf"; path = "../src/assets/fonts/Karma/Karma-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7295879B68DA4C07B4F10ABA /* Karma-Regular.ttf */ = {isa = PBXFileReference; name = "Karma-Regular.ttf"; path = "../src/assets/fonts/Karma/Karma-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8BF0F7CA26444C988F810E0A /* Karma-SemiBold.ttf */ = {isa = PBXFileReference; name = "Karma-SemiBold.ttf"; path = "../src/assets/fonts/Karma/Karma-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BCCA572716304C1E917E2EBB /* Labrada-Black.ttf */ = {isa = PBXFileReference; name = "Labrada-Black.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		50CA2A332E5046CBB7512F34 /* Labrada-BlackItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-BlackItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-BlackItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BA9F3DAA07FF4A00B6F2299E /* Labrada-Bold.ttf */ = {isa = PBXFileReference; name = "Labrada-Bold.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EA4296C9D5EC4E24A2C1E7F7 /* Labrada-BoldItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-BoldItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		81E6774046F94D019FCECC3D /* Labrada-ExtraBold.ttf */ = {isa = PBXFileReference; name = "Labrada-ExtraBold.ttf"; path = "../src/assets/fonts/Labrada/Labrada-ExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F57CFA4D763B469495719957 /* Labrada-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-ExtraBoldItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-ExtraBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DEA0CB32B8424EB0AB96D609 /* Labrada-ExtraLight.ttf */ = {isa = PBXFileReference; name = "Labrada-ExtraLight.ttf"; path = "../src/assets/fonts/Labrada/Labrada-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		582225FCAB674A5BB2EA6792 /* Labrada-ExtraLightItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-ExtraLightItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-ExtraLightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FFDDD8AC84B645989AFF1A8B /* Labrada-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "Labrada-Italic-VariableFont_wght.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E17939CF252B4ED79B3838F6 /* Labrada-Italic.ttf */ = {isa = PBXFileReference; name = "Labrada-Italic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		9AB4CFA09D644717974559DC /* Labrada-Light.ttf */ = {isa = PBXFileReference; name = "Labrada-Light.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8BCF18594E814A69905B79B1 /* Labrada-LightItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-LightItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-LightItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EBE923EBCD1441E7AADAEBC4 /* Labrada-Medium.ttf */ = {isa = PBXFileReference; name = "Labrada-Medium.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		117CC8B35A6A40DF882F0668 /* Labrada-MediumItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-MediumItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-MediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		30F68B56AC4A4BC7923E0742 /* Labrada-Regular.ttf */ = {isa = PBXFileReference; name = "Labrada-Regular.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		257D8CD31F1A406D8526A526 /* Labrada-SemiBold.ttf */ = {isa = PBXFileReference; name = "Labrada-SemiBold.ttf"; path = "../src/assets/fonts/Labrada/Labrada-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B244F03998D64CDA8F3F2020 /* Labrada-SemiBoldItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-SemiBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DE011A8951FC400DB952E2CD /* Labrada-Thin.ttf */ = {isa = PBXFileReference; name = "Labrada-Thin.ttf"; path = "../src/assets/fonts/Labrada/Labrada-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E808171404A3448299BD2C91 /* Labrada-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Labrada-ThinItalic.ttf"; path = "../src/assets/fonts/Labrada/Labrada-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		263EC480DE8A4EF5AEBF20C3 /* Labrada-VariableFont_wght.ttf */ = {isa = PBXFileReference; name = "Labrada-VariableFont_wght.ttf"; path = "../src/assets/fonts/Labrada/Labrada-VariableFont_wght.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4A21AE98F1514C7CBE65123F /* OFL.txt */ = {isa = PBXFileReference; name = "OFL.txt"; path = "../src/assets/fonts/Karma/OFL.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7A3F6AB47C9D4E2A8AADA626 /* OFL.txt */ = {isa = PBXFileReference; name = "OFL.txt"; path = "../src/assets/fonts/Labrada/OFL.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AEB27787A52C46E3BB54B65F /* README.txt */ = {isa = PBXFileReference; name = "README.txt"; path = "../src/assets/fonts/Labrada/README.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,12 +157,34 @@
 		5E729A47496D4CC096A582B5 /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				C8C31DCF9D0F46F697545DA6 /* Karma-Bold.ttf */,
-				8E78D181D5BC4F6D9438CBBD /* Karma-Light.ttf */,
-				6A27B42C96D841D7B03F071D /* Karma-Medium.ttf */,
-				F480C7C5C06742C3A132A0BE /* Karma-Regular.ttf */,
-				5CF671257446489AA54159F8 /* Karma-SemiBold.ttf */,
-				BC6B858DEBCB42E38A7AE009 /* OFL.txt */,
+				AFA0B035E251430A84202820 /* Karma-Bold.ttf */,
+				6F3F90BE09EE459C864D5B06 /* Karma-Light.ttf */,
+				EF9E336CAB4F49038297A11D /* Karma-Medium.ttf */,
+				7295879B68DA4C07B4F10ABA /* Karma-Regular.ttf */,
+				8BF0F7CA26444C988F810E0A /* Karma-SemiBold.ttf */,
+				BCCA572716304C1E917E2EBB /* Labrada-Black.ttf */,
+				50CA2A332E5046CBB7512F34 /* Labrada-BlackItalic.ttf */,
+				BA9F3DAA07FF4A00B6F2299E /* Labrada-Bold.ttf */,
+				EA4296C9D5EC4E24A2C1E7F7 /* Labrada-BoldItalic.ttf */,
+				81E6774046F94D019FCECC3D /* Labrada-ExtraBold.ttf */,
+				F57CFA4D763B469495719957 /* Labrada-ExtraBoldItalic.ttf */,
+				DEA0CB32B8424EB0AB96D609 /* Labrada-ExtraLight.ttf */,
+				582225FCAB674A5BB2EA6792 /* Labrada-ExtraLightItalic.ttf */,
+				FFDDD8AC84B645989AFF1A8B /* Labrada-Italic-VariableFont_wght.ttf */,
+				E17939CF252B4ED79B3838F6 /* Labrada-Italic.ttf */,
+				9AB4CFA09D644717974559DC /* Labrada-Light.ttf */,
+				8BCF18594E814A69905B79B1 /* Labrada-LightItalic.ttf */,
+				EBE923EBCD1441E7AADAEBC4 /* Labrada-Medium.ttf */,
+				117CC8B35A6A40DF882F0668 /* Labrada-MediumItalic.ttf */,
+				30F68B56AC4A4BC7923E0742 /* Labrada-Regular.ttf */,
+				257D8CD31F1A406D8526A526 /* Labrada-SemiBold.ttf */,
+				B244F03998D64CDA8F3F2020 /* Labrada-SemiBoldItalic.ttf */,
+				DE011A8951FC400DB952E2CD /* Labrada-Thin.ttf */,
+				E808171404A3448299BD2C91 /* Labrada-ThinItalic.ttf */,
+				263EC480DE8A4EF5AEBF20C3 /* Labrada-VariableFont_wght.ttf */,
+				4A21AE98F1514C7CBE65123F /* OFL.txt */,
+				7A3F6AB47C9D4E2A8AADA626 /* OFL.txt */,
+				AEB27787A52C46E3BB54B65F /* README.txt */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -186,12 +252,34 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				8DB8A29CD2CA48C3B6DC01CC /* Karma-Bold.ttf in Resources */,
-				8DDCD7C153D849D0B43DA8D0 /* Karma-Light.ttf in Resources */,
-				E876A8B092A6460897F0505A /* Karma-Medium.ttf in Resources */,
-				E954B1457DF64B03816D1874 /* Karma-Regular.ttf in Resources */,
-				3EBA0D8BCDC646BAA0DC011A /* Karma-SemiBold.ttf in Resources */,
-				E3D1FE68C51247F480292816 /* OFL.txt in Resources */,
+				FFAB9F516FE74272B1C1CE59 /* Karma-Bold.ttf in Resources */,
+				A8FB5C078F7E4A4D847C148D /* Karma-Light.ttf in Resources */,
+				7B2F138699B24DB6B6E31C9C /* Karma-Medium.ttf in Resources */,
+				8C6EFA00CD234C889F7A67EF /* Karma-Regular.ttf in Resources */,
+				83867072298046CC8ACD0704 /* Karma-SemiBold.ttf in Resources */,
+				5D3AAFA380DC49A5BDE8E3D8 /* Labrada-Black.ttf in Resources */,
+				AED0541F0D7D4ED49A0B6E25 /* Labrada-BlackItalic.ttf in Resources */,
+				3B4FC2A64A364DEE80A23583 /* Labrada-Bold.ttf in Resources */,
+				9A4AEC9AF213433F9942D188 /* Labrada-BoldItalic.ttf in Resources */,
+				E3EB3CEC3ECE4660B01DC68A /* Labrada-ExtraBold.ttf in Resources */,
+				5E57BD6BD5374D538360B996 /* Labrada-ExtraBoldItalic.ttf in Resources */,
+				24BABB30279241ECBD3A2909 /* Labrada-ExtraLight.ttf in Resources */,
+				5973B8D423CA4A4D8FAF9FCA /* Labrada-ExtraLightItalic.ttf in Resources */,
+				3A1437C981F24497A3DF1399 /* Labrada-Italic-VariableFont_wght.ttf in Resources */,
+				1F3E2D7111B446E08FE6E10E /* Labrada-Italic.ttf in Resources */,
+				F5656BC004F2484A926CDB79 /* Labrada-Light.ttf in Resources */,
+				489A8F7458134A96AB6816CE /* Labrada-LightItalic.ttf in Resources */,
+				4E716BE7A4B244E698764A6A /* Labrada-Medium.ttf in Resources */,
+				543F65F43304487C8C0F8080 /* Labrada-MediumItalic.ttf in Resources */,
+				D6B898C28B0D4834BF0644E6 /* Labrada-Regular.ttf in Resources */,
+				CD732A7811D045A8B4FCE93B /* Labrada-SemiBold.ttf in Resources */,
+				851721F9F3464AC1AF0A8590 /* Labrada-SemiBoldItalic.ttf in Resources */,
+				EB6732D6B8374CA6A0BE113B /* Labrada-Thin.ttf in Resources */,
+				F197A5E1F3F84527998A4B53 /* Labrada-ThinItalic.ttf in Resources */,
+				49E2C2A75273420097578151 /* Labrada-VariableFont_wght.ttf in Resources */,
+				754BDC177F6D47068D2A006C /* OFL.txt in Resources */,
+				D335D3EC44054DB08B38CE32 /* OFL.txt in Resources */,
+				AB1639594666445EBAB0071F /* README.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
