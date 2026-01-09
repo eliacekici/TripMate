@@ -13,7 +13,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RootStackParamList } from './AppFooter'; 
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
 
 import { styles, COLORS } from './SignUpScreen.styles';
 

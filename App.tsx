@@ -13,6 +13,7 @@ import MyPlansLoggedOutScreen from './src/screens/MyPlansLoggedOutScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import DashboardMyPlansScreen from './src/screens/DashboardMyPlansScreen';
+import CreatingPlanEmptyScreen from './src/screens/CreatingPlanEmptyScreen';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -34,6 +35,7 @@ export type RootStackParamList = {
   SignUpScreen: undefined;
   LoginScreen: undefined;
   DashboardMyPlansScreen: undefined;
+  CreatingPlanEmptyScreen: { destination: string };
   
 };
 
@@ -59,6 +61,7 @@ export default function App() {
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="DashboardMyPlansScreen" component={DashboardMyPlansScreen} />
+        <Stack.Screen name="CreatingPlanEmptyScreen" component={CreatingPlanEmptyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

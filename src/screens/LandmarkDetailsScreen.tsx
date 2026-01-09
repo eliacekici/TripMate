@@ -9,7 +9,8 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack'; 
 import WebView from 'react-native-webview';
 import { WebView as WebViewType } from 'react-native-webview';
-import AppFooter, { RootStackParamList, ScreenName } from './AppFooter';
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'LandmarkDetailsScreen'>;

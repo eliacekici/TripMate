@@ -17,7 +17,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
-import AppFooter, { RootStackParamList } from './AppFooter';
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
+
 import { styles, gridStyles, COLORS } from './DashboardMyPlans.styles';
 
 
@@ -28,12 +30,6 @@ interface NominatimResult {
     type: string;
     importance?: number;
 }
-
-
-type NavigationProp = NativeStackNavigationProp<
-    RootStackParamList,
-    'DashboardMyPlansScreen'
->;
 
 const HeaderImagePlaceholder = require('../assets/images/header_image_placeholder.png');
 
@@ -143,7 +139,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 /* -------------------- MAIN SCREEN -------------------- */
 
 const DashboardMyPlansScreen = () => {
-    const navigation = useNavigation<NavigationProp>();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -161,8 +157,10 @@ const DashboardMyPlansScreen = () => {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        // Fetch userId on component mount
-        AsyncStorage.getItem('userId').then(setUserId);
+        AsyncStorage.getItem('userId').then(id => {
+            console.log('Fetched userId:', id);  // <-- see in your Metro/console
+            setUserId(id);
+        });
     }, []);
     
     // Helper function to navigate to the previous month
@@ -298,34 +296,71 @@ const DashboardMyPlansScreen = () => {
             Alert.alert('Missing Dates', 'Please select start and end dates.');
             return;
         }
+        if (!userId) {
+            Alert.alert('Error', 'User not logged in. Please log in first.');
+            return;
+        }
 
         setValidatingDestination(true);
         const valid = await validateDestinationWithNominatim(destination);
         setValidatingDestination(false);
 
         if (!valid) {
-            // Updated error message for clarity
             setDestinationError('Invalid destination. Please enter a city, country, or major travel spot.');
             return;
         }
 
-        // Simulating trip saving successful
-        Alert.alert(
-            'Trip Saved!',
-            `Destination: ${destination}\nDates: ${formatDate(
-                startDate
-            )} – ${formatDate(endDate)}`
-        );
-        
-        // Reset form after successful planning
-        setDestination('');
-        setStartDate(null);
-        setEndDate(null);
-        setCurrentMonthYear(
-            new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-        );
-    };
+        try {
+        // Send trip to backend
+            const response = await fetch('http://10.0.2.2:5000/api/trip-plans', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    destination,
+                    startDate: startDate.toISOString(),
+                    endDate: endDate.toISOString(),
+                    notes: null,
+                }),
+            });
 
+            const data = await response.json();
+
+            if (!response.ok) {
+                console.error('Error saving trip:', data);
+                Alert.alert('Error', 'Failed to save trip. Try again.');
+                return;
+            }
+
+            // Show success alert
+            Alert.alert(
+                'Trip Saved!',
+                `Destination: ${destination}\nDates: ${formatDate(startDate)} – ${formatDate(endDate)}`,
+                [
+                    {
+                        text: 'OK',
+                        onPress: () => {
+                            setTimeout(() => {
+                            navigation.navigate('CreatingPlanEmptyScreen', { destination });
+                            }, 100); // 100ms delay ensures the alert fully closes first
+                        },
+                    },
+                ]
+            );
+
+            // Reset form
+            setDestination('');
+            setStartDate(null);
+            setEndDate(null);
+            setCurrentMonthYear(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+
+        } catch (err) {
+            console.error('Network error:', err);
+            Alert.alert('Error', 'Network error. Could not save trip.');
+        }
+    }; 
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>

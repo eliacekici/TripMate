@@ -10,7 +10,10 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { RootStackParamList } from './AppFooter';
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import { styles, COLORS } from './LoginScreen.styles';
 
@@ -70,7 +73,18 @@ const LoginScreen = () => {
       }
 
       console.log('Logged in user:', data.user);
+
+      // SAVE USER ID HERE 
+      if (data.user?.id) {
+        await AsyncStorage.setItem('userId', String(data.user.id));
+      }
+
+      if (data.token) {
+        await AsyncStorage.setItem('token', data.token);
+      }
+
       navigation.replace('DashboardMyPlansScreen');
+
 
     } catch (error) {
       setErrorMessage('Something went wrong. Please try again.');

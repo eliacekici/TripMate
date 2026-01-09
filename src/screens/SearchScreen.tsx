@@ -14,7 +14,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import AppFooter, { RootStackParamList } from './AppFooter';
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
 
 const suggestions = [
   { id: '1', name: 'Budapest, Hungary' }, 

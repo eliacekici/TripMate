@@ -12,7 +12,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AppFooter, { RootStackParamList } from './AppFooter'; 
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 

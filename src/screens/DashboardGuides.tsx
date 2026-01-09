@@ -14,7 +14,8 @@ import {
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import AppFooter, { ScreenName, RootStackParamList } from './AppFooter';
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

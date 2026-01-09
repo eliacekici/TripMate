@@ -13,7 +13,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
-import AppFooter, { RootStackParamList, ScreenName } from './AppFooter'; 
+import AppFooter from './AppFooter'; 
+import { RootStackParamList } from '../../App';
 
 import { 
     searchAttractions, 

@@ -240,8 +240,6 @@ export const getPlacePhotoUrl = async (placeName: string): Promise<string | null
         if (data.results && data.results.length > 0) {
             const photo = data.results[0];
             
-            // Unsplash provides URLs in different sizes. 'regular' or 'small' is best for mobile
-            // Make sure to use the 'hotlinked' URL and keep the ixid parameter.
             return photo.urls.regular; 
         }
 
@@ -257,7 +255,7 @@ export const getPlacePhotoUrl = async (placeName: string): Promise<string | null
  * Calculates distance in meters between two coordinates using the Haversine formula.
  */
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371e3; // Earth's radius in meters
+    const R = 6371e3; 
     const φ1 = lat1 * Math.PI / 180; 
     const φ2 = lat2 * Math.PI / 180;
     const Δφ = (lat2 - lat1) * Math.PI / 180;

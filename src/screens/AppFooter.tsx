@@ -1,26 +1,7 @@
 import React from 'react'; 
 import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'; 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'; 
-import { NavigationProp } from '@react-navigation/native'; 
-
-// --- TYPE DEFINITIONS --- 
-export type RootStackParamList = {     
-    DashboardGuides: undefined;     
-    MyPlansLoggedOutScreen: undefined;     
-    ProfileScreen: undefined;     
-    SearchScreen: undefined;     
-    CityDetailsScreen: { city: string };     
-    LoginScreen: undefined;     
-    SignUpScreen: undefined; 
-    DashboardMyPlansScreen: undefined;
-    LandmarkDetailsScreen: { 
-        placeName: string; 
-        placeCategories: { name: string }[]; 
-        lat: number; 
-        lon: number; 
-        distanceDetail: string; 
-    }; 
-}; 
+import { RootStackParamList } from '../../App';
 
 export type ScreenName = keyof RootStackParamList; 
 

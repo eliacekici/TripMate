@@ -9,7 +9,6 @@ import {
   SafeAreaView,
   Alert,
 } from 'react-native';
-//import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -22,17 +21,6 @@ type RootStackParamList = {
 
 const OnboardingScreen_1: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  // const handleNext = async () => {
-  //   try {
-  //     await AsyncStorage.setItem('hasOnboarded', 'true'); // mark as completed
-  //     navigation.replace('Splash'); // or 'Home' if you want to go directly to Home
-  //   } catch (err) {
-  //     // handle error gracefully
-  //     console.warn('Could not save onboarding flag', err);
-  //     Alert.alert('Error', 'Could not complete onboarding. Please try again.');
-  //   }
-  // };
 
   const handleNext = () => {
     navigation.navigate('Onboarding2');
