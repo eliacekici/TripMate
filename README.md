@@ -17,7 +17,8 @@ Git
 
 1) Clone the repository:
 
-[git clone https://github.com/your-username/tripmate.git](https://github.com/eliacekici/TripMate.git)
+git clone https://github.com/your-username/tripmate.git
+(https://github.com/eliacekici/TripMate.git)
 
 
 2) Navigate into the project folder:
