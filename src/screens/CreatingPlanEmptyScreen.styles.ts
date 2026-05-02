@@ -53,6 +53,43 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  categoryFooterOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 90,
+    backgroundColor: '#E0F2FE',
+    borderRadius: 16,
+    marginHorizontal: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 2,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    elevation: 8,
+  },
+  categoryIconContainer: {
+    flex: 1,
+    alignItems: 'center',
+    minWidth: 56,
+    maxWidth: 72,
+    marginRight: 6,
+  },
+  categoryIconImage: {
+    width: 38,
+    height: 38,
+    marginBottom: 4,
+  },
+  categoryIconLabel: {
+    fontSize: 11,
+    color: '#00223D',
+    fontWeight: '600',
+    textAlign: 'center',
+    letterSpacing: 0.1,
+    flexShrink: 1,
+    maxWidth: 100,
+    includeFontPadding: false,
+  },
 });
 
 export default styles;

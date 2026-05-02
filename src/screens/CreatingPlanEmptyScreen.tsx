@@ -36,6 +36,7 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
   const { destination } = route.params;
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(true);
+  const [showCategoryFooter, setShowCategoryFooter] = useState(false);
 
   useEffect(() => {
     // Fetch a photo from Unsplash API based on the destination
@@ -101,17 +102,36 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
         <TouchableOpacity
           style={styles.plusButton}
           onPress={() => {
-            console.log('Plus button pressed');
+            setShowCategoryFooter(true);
           }}
         >
           <Image source={PlusIcon} style={styles.plusIcon} />
         </TouchableOpacity>
       </View>
 
+      {/* Category Footer Overlay */}
+      {showCategoryFooter && (
+        <View style={styles.categoryFooterOverlay}>
+          <CategoryIcon label="Flight" image={require('../assets/images/flight.png')} onPress={() => {}} />
+          <CategoryIcon label="Hotel" image={require('../assets/images/hotel.png')} onPress={() => {}} />
+          <CategoryIcon label="Food" image={require('../assets/images/food.png')} onPress={() => {}} />
+          <CategoryIcon label="Spots" image={require('../assets/images/spots.png')} onPress={() => {}} />
+          <CategoryIcon label="Transport" image={require('../assets/images/transportation.png')} onPress={() => {}} />
+        </View>
+      )}
+
       {/* Footer */}
       <AppFooter activeScreen="CreatingPlanEmptyScreen" navigation={navigation} />
     </SafeAreaView>
   );
 };
+
+// CategoryIcon component
+const CategoryIcon = ({ label, image, onPress }: { label: string; image: any; onPress: () => void }) => (
+  <TouchableOpacity style={styles.categoryIconContainer} onPress={onPress}>
+    <Image source={image} style={styles.categoryIconImage} resizeMode="contain" />
+    <Text style={styles.categoryIconLabel}>{label}</Text>
+  </TouchableOpacity>
+);
 
 export default CreatingPlanEmptyScreen;

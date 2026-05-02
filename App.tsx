@@ -47,19 +47,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { token, userId } = await getStoredAuth();
-      if (token && userId) {
-        setInitialRoute('DashboardMyPlansScreen');
-      } else {
-        setInitialRoute('Splash');
-      }
-      setLoading(false);
-    };
-    checkAuth();
+    // Always start on Home (DashboardGuides)
+    setInitialRoute('DashboardGuides');
+    setLoading(false);
   }, []);
 
-  if (loading) return null;
+  if (loading || !initialRoute) return null;
 
   return (
     <NavigationContainer>
@@ -79,5 +72,4 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-
 }
