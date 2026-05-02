@@ -1,5 +1,7 @@
-import React from 'react'; 
-import { View, Text, Image, TouchableOpacity, StyleSheet, Platform } from 'react-native'; 
+import React, { useEffect, useState } from 'react'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, Image, TouchableOpacity, Platform } from 'react-native';
+import footerStyles from './AppFooter.styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'; 
 import { RootStackParamList } from '../../App';
 
@@ -17,30 +19,39 @@ const FOOTER_BG_COLOR = '#C3E2F1';
 
 const AppFooter: React.FC<FooterProps> = ({ navigation, activeScreen }) => { 
     // Define the tabs, their screen name, and asset location once 
-    const tabs = [         
-        {             
-            name: 'Home',             
-            screen: 'DashboardGuides' as ScreenName,             
-            iconSource: require('../assets/images/guides_logo.png'),             
-            iconStyle: footerStyles.footerIcon1         
-        },         
-        {             
-            name: 'My Plans',             
-            screen: 'MyPlansLoggedOutScreen' as ScreenName,             
-            iconSource: require('../assets/images/myPlans_logo.png'),             
-            iconStyle: footerStyles.footerIcon2         
-        },         
-        {             
-            name: 'Profile',             
-            screen: 'ProfileScreen' as ScreenName,             
-            iconSource: require('../assets/images/profile_logo.png'),             
-            iconStyle: footerStyles.footerIcon3         
-        },     
-    ]; 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(() => {
+        (async () => {
+            const token = await AsyncStorage.getItem('token');
+            const userId = await AsyncStorage.getItem('userId');
+            setIsLoggedIn(!!token && !!userId);
+        })();
+    }, []);
 
-    const handleNavigation = (screen: ScreenName) => {         
-        navigation.navigate(screen as any);     
-    }; 
+    const tabs = [
+        {
+            name: 'Home',
+            screen: 'DashboardGuides' as ScreenName,
+            iconSource: require('../assets/images/guides_logo.png'),
+            iconStyle: footerStyles.footerIcon1
+        },
+        {
+            name: 'My Plans',
+            screen: isLoggedIn ? 'DashboardMyPlansScreen' as ScreenName : 'MyPlansLoggedOutScreen' as ScreenName,
+            iconSource: require('../assets/images/myPlans_logo.png'),
+            iconStyle: footerStyles.footerIcon2
+        },
+        {
+            name: 'Profile',
+            screen: 'ProfileScreen' as ScreenName,
+            iconSource: require('../assets/images/profile_logo.png'),
+            iconStyle: footerStyles.footerIcon3
+        },
+    ];
+
+    const handleNavigation = (screen: ScreenName) => {
+        navigation.navigate(screen as any);
+    };
 
     return (         
         <View style={footerStyles.footer}>             
@@ -82,44 +93,4 @@ const AppFooter: React.FC<FooterProps> = ({ navigation, activeScreen }) => {
 
 export default AppFooter; 
 
-// --- Footer Styles (Consolidated and using absolute positioning) --- 
-const footerStyles = StyleSheet.create({     
-    footer: {         
-        flexDirection: 'row',         
-        borderTopWidth: 1,         
-        borderColor: '#0C1559',         
-        paddingVertical: 10,         
-        justifyContent: 'space-around',         
-        backgroundColor: FOOTER_BG_COLOR,         
-        // CRUCIAL: Absolute positioning fixes the footer to the bottom         
-        position: 'absolute',         
-        bottom: 0,         
-        left: 0,         
-        right: 0,         
-        // Adjust padding for safe area on iOS         
-        paddingBottom: Platform.OS === 'ios' ? 30 : 5,     
-    },     
-    footerItem: {         
-        alignItems: 'center',     
-    },     
-    footerText: {         
-        fontSize: 12,         
-        color: INACTIVE_COLOR,     
-    },     
-    // The specific icon sizes you used     
-    footerIcon1: {         
-        width: 21,         
-        height: 37,         
-        marginBottom: 4,     
-    },     
-    footerIcon2: {         
-        width: 40,         
-        height: 40,         
-        marginBottom: 4,     
-    },     
-    footerIcon3: {         
-        width: 41,         
-        height: 41,         
-        marginBottom: 4,     
-    }, 
-});
+

@@ -3,12 +3,12 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   StatusBar,
   TouchableOpacity,
   SafeAreaView,
   Alert,
 } from 'react-native';
+import styles from './OnboardingScreen_1.styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -56,50 +56,4 @@ const OnboardingScreen_1: React.FC = () => {
 
 export default OnboardingScreen_1;
 
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: '#E0F2FE', 
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center', 
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 36,
-    fontFamily: 'Karma-Bold',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 8,
-    color: '#000000',
-  },
-  subtitle: {
-    fontSize: 20,
-    fontFamily: 'Karma-Regular',
-    textAlign: 'center',
-    marginBottom: 24,
-    color: '#000000',
-  },
-  image: {
-    width: 393,
-    height: 356,
-    marginBottom: 32,
-  },
-  button: {
-    backgroundColor: '#00223D', 
-    paddingHorizontal: 36,
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minWidth: 140,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontFamily: 'Karma-Bold',
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-});
+

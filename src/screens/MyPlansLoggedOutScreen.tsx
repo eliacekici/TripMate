@@ -2,13 +2,13 @@ import React from 'react';
 import {
   View,
   Text,
-  Image, 
-  ImageBackground, 
-  StyleSheet,
+  Image,
+  ImageBackground,
   TouchableOpacity,
   Platform,
   Dimensions,
 } from 'react-native';
+import styles from './MyPlansLoggedOutScreen.styles';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -72,79 +72,3 @@ const MyPlansLoggedOutScreen = () => {
 };
 
 export default MyPlansLoggedOutScreen;
-
-// --- Stylesheet ---
-
-const COLORS = {
-  NAVY_BLUE: '#00223D', 
-  LIGHT_BLUE_BACKGROUND: '#E0F2FE', 
-  DARK_TEXT: '#000000',
-  GRAY_TEXT: '#000000',
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.LIGHT_BLUE_BACKGROUND, 
-  },
-  
-
-  headerImage: {
-    width: '100%',
-    height: screenHeight * 0.30, 
-    resizeMode: 'cover',
-  },
-  
-  content: {
-    flex: 1, 
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    paddingTop: 60, 
-    paddingBottom: Platform.OS === 'ios' ? 120 : 90,
-  },
-  
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: COLORS.DARK_TEXT,
-    marginBottom: 8, 
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: COLORS.GRAY_TEXT,
-    marginBottom: 40,
-    textAlign: 'center',
-    paddingBottom: 20,
-  },
-  
-  
-  loginButton: {
-    width: '65%', 
-    backgroundColor: COLORS.NAVY_BLUE,
-    paddingVertical: 18, 
-    borderRadius: 8,
-    alignItems: 'center', 
-    marginBottom: 30,
-  },
-  
-  loginButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600', 
-  },
-  
-  signupText: {
-    fontSize: 14,
-    color: COLORS.GRAY_TEXT,
-    marginBottom: 6,
-    paddingTop: 40,
-  },
-
-  signupLink: {
-    fontSize: 16, 
-    color: COLORS.NAVY_BLUE,
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  },
-});

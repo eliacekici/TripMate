@@ -5,7 +5,5 @@ declare module '@env' {
   // The 'string' type assumes all variables are strings.
   export const UNSPLASH_ACCESS_KEY: string;
   export const GEOAPIFY_API_KEY: string;
-  
-  // Example for another variable:
-  // export const ANOTHER_API_KEY: string;
+ 
 }

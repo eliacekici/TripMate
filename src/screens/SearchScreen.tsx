@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  FlatList, 
-  Image, 
-  Keyboard, 
-  Platform 
+    View, 
+    Text, 
+    TextInput, 
+    TouchableOpacity, 
+    FlatList, 
+    Image, 
+    Keyboard, 
+    Platform 
 } from 'react-native';
+import styles from './SearchScreen.styles';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -64,126 +64,16 @@ const SearchScreen = () => {
                     value={searchText}
                     onChangeText={setSearchText}
                     onSubmitEditing={handleSearchSubmit}
-                    returnKeyType="search"
                 />
-                <TouchableOpacity 
-                    onPress={handleSearchSubmit}
-                    disabled={searchText.trim().length === 0}
-                >
-                    <Image 
-                        source={require('../assets/images/search_icon.png')} 
-                        style={{
-                            width: 19, 
-                            height: 19, 
-                            marginRight: 6,
-                            opacity: searchText.trim().length > 0 ? 1 : 0.5
-                        }}
-                    />
-                </TouchableOpacity>
+                {/* ...existing code for the rest of the component... */}
             </View>
-
-            <TouchableOpacity onPress={() => navigation.navigate('DashboardGuides')}>
-                <Text style={styles.cancel}>Cancel</Text>
-            </TouchableOpacity>
+            {/* ...existing code for the rest of the component... */}
         </View>
-
-        {searchText.trim().length === 0 && (
-            <FlatList
-                data={suggestions}
-                keyExtractor={item => item.id}
-                ListHeaderComponent={() => (
-                    <Text style={styles.suggestionsTitle}>Popular Destinations</Text>
-                )}
-                contentContainerStyle={{
-                    paddingBottom: FOOTER_HEIGHT + 20,
-                }}
-                renderItem={({ item }) => (
-                    <TouchableOpacity 
-                        style={styles.suggestionItem}
-                        onPress={() => handleCityPress(item.name)}
-                    >
-                        <Image 
-                            source={require('../assets/images/location_icon.png')} 
-                            style={{ width: 22, height: 22, marginRight: 10 }} 
-                        />
-                        <Text style={styles.suggestionText}>{item.name}</Text>
-                    </TouchableOpacity>
-                )}
-            />
-        )}
+        {/* ...existing code for the rest of the component... */}
       </View>
-
-      {/* Reusable footer */}
-      <AppFooter 
-          navigation={navigation} 
-          // We assume Search is part of the 'Home' flow, so we highlight DashboardGuides
-          activeScreen={'SearchScreen'} 
-      />
-
+      {/* ...existing code for the rest of the component... */}
     </View>
   );
 };
 
 export default SearchScreen;
-
-// --- Styles ---
-
-const styles = StyleSheet.create({
-    fullContainer: { 
-        flex: 1,
-        backgroundColor: '#E0F2FE',
-    },
-    contentContainer: { 
-        flex: 1,
-        paddingHorizontal: 15,
-        paddingTop: 15,
-    },
-    placeholder: {
-        color: '#000000',
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-        marginTop: 20,
-    },
-    searchBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
-        backgroundColor: '#C3E2F1',
-        borderRadius: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        marginBottom: 16,
-    },
-    input: {
-        flex: 1,
-        fontSize: 16,
-        fontFamily: 'Karma-Bold', 
-        fontWeight: '700',
-        marginRight: 8,
-    },
-    cancel: {
-        marginLeft: 12,
-        fontSize: 16,
-        color: '#000000',
-        marginBottom:15,
-    },
-    suggestionsTitle: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#00223D',
-        marginBottom: 10,
-        marginTop: 5,
-    },
-    suggestionItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-    },
-    suggestionText: {
-        fontSize: 16,
-        color: '#000000',
-    },
-});

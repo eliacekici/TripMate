@@ -144,6 +144,7 @@ const DashboardMyPlansScreen = () => {
     const [destination, setDestination] = useState('');
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
+    const [loadingTrip, setLoadingTrip] = useState(true);
 
     // Initial state set to the first day of the current month
     const [currentMonthYear, setCurrentMonthYear] = useState(
@@ -157,10 +158,27 @@ const DashboardMyPlansScreen = () => {
     const [userId, setUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        AsyncStorage.getItem('userId').then(id => {
-            console.log('Fetched userId:', id);  // <-- see in your Metro/console
+        const fetchTrip = async () => {
+            const id = await AsyncStorage.getItem('userId');
             setUserId(id);
-        });
+            if (id) {
+                try {
+                    const res = await fetch(`http://10.0.2.2:5000/api/trip-plans/${id}`);
+                    const data = await res.json();
+                    if (data.tripPlans && data.tripPlans.length > 0) {
+                        // Use the most recent trip (last in array)
+                        const lastTrip = data.tripPlans[data.tripPlans.length - 1];
+                        setDestination(lastTrip.destination);
+                        setStartDate(new Date(lastTrip.start_date));
+                        setEndDate(new Date(lastTrip.end_date));
+                    }
+                } catch (e) {
+                    // ignore fetch errors, just show empty
+                }
+            }
+            setLoadingTrip(false);
+        };
+        fetchTrip();
     }, []);
     
     // Helper function to navigate to the previous month
@@ -361,6 +379,13 @@ const DashboardMyPlansScreen = () => {
             Alert.alert('Error', 'Network error. Could not save trip.');
         }
     }; 
+    if (loadingTrip) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <Text style={{ textAlign: 'center', marginTop: 40 }}>Loading your trip...</Text>
+            </SafeAreaView>
+        );
+    }
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>

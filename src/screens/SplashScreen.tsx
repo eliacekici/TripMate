@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, Image, StatusBar } from 'react-native';
+import styles from './SplashScreen.styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -45,21 +46,4 @@ const SplashScreen = () => {
 
 export default SplashScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#E0F2FE', 
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  logo: {
-    width: 134,
-    height: 134,
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 16,
-    fontFamily: 'Karma-Bold',
-    color: '#000000',
-  },
-});
+

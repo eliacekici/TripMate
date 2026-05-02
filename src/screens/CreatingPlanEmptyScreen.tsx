@@ -4,10 +4,10 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  StyleSheet,
   Dimensions,
   ImageBackground,
 } from 'react-native';
+import styles from './CreatingPlanEmptyScreen.styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App'; 
@@ -35,6 +35,7 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
 }) => {
   const { destination } = route.params;
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+  const [showTooltip, setShowTooltip] = useState(true);
 
   useEffect(() => {
     // Fetch a photo from Unsplash API based on the destination
@@ -61,6 +62,11 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
   };
 
     fetchPhoto();
+
+    // Show tooltip for 6 seconds on first mount
+    setShowTooltip(true);
+    const timer = setTimeout(() => setShowTooltip(false), 6000);
+    return () => clearTimeout(timer);
   }, [destination]);
 
   return (
@@ -74,93 +80,38 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
         />
       )}
 
-     {/* DESTINATION HEADER BELOW THE IMAGE */}
+      {/* DESTINATION HEADER BELOW THE IMAGE */}
       <View style={styles.destinationHeader}>
-          <Text style={styles.destinationText}>
-              On my way to {destination}
-          </Text>
+        <Text style={styles.destinationText}>
+          On my way to {destination}
+        </Text>
       </View>
       {/* ------------------------------------------- */}
 
-      {/* Middle empty space */}
-      <View style={styles.emptySpace} />
+      {/* Middle empty space */}
+      <View style={styles.emptySpace} />
 
-      {/* Bottom plus button and tooltip */}
-      <View style={styles.bottomContainer}>
-        {/* ... (tooltip and button remain the same) */}
-        <View style={styles.tooltip}>
-          <Text style={styles.tooltipText}>Click + to start planning</Text>
-        </View>
+      {/* Bottom plus button and tooltip */}
+      <View style={styles.bottomContainer}>
+        {showTooltip && (
+          <View style={styles.tooltip}>
+            <Text style={styles.tooltipText}>Click + to start planning</Text>
+          </View>
+        )}
+        <TouchableOpacity
+          style={styles.plusButton}
+          onPress={() => {
+            console.log('Plus button pressed');
+          }}
+        >
+          <Image source={PlusIcon} style={styles.plusIcon} />
+        </TouchableOpacity>
+      </View>
 
-        <TouchableOpacity
-            style={styles.plusButton}
-            onPress={() => {
-              console.log('Plus button pressed'); 
-            }}
-          >
-            <Image source={PlusIcon} style={styles.plusIcon} />
-          </TouchableOpacity>
-      </View>
-
-      {/* Footer */}
-      <AppFooter activeScreen="CreatingPlanEmptyScreen" navigation={navigation} />
-    </SafeAreaView>
-  );
+      {/* Footer */}
+      <AppFooter activeScreen="CreatingPlanEmptyScreen" navigation={navigation} />
+    </SafeAreaView>
+  );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#E0F2FE',
-  },
-  topImage: {
-    width: width,
-    height: height * 0.3,
-  },
-  destinationHeader: {
-        padding: 15,
-        backgroundColor: '#E0F2FE', 
-        marginBottom: 10,
-    },
-    destinationText: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#000000',
-        fontFamily: 'Labrada-Bold',
-        textAlign: 'center',
-    },
-  emptySpace: {
-    flex: 1,
-  },
-  bottomContainer: {
-    position: 'absolute',
-    bottom: 120, 
-    right: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  plusButton: {
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
-  alignItems: 'center',
-  },
-  plusIcon: {
-    width: 48,
-    height: 42,
-  },
-  tooltip: {
-    marginRight: 5, 
-    backgroundColor: '#C3E2F1',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  tooltipText: {
-    color: '#000000',
-    fontSize: 14,
-    fontFamily: 'Karma-Bold',
-  },
-});
 
 export default CreatingPlanEmptyScreen;

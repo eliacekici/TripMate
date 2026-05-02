@@ -3,11 +3,11 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import styles from './OnboardingScreen_2.styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -52,45 +52,3 @@ const OnboardingScreen_2 = () => {
 };
 
 export default OnboardingScreen_2;
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#E0F2FE' },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  title: {
-    fontSize: 36,
-    fontFamily: 'Karma-Bold',
-    fontWeight: '700',
-    textAlign: 'center',
-    marginBottom: 8,
-    color: '#000000',
-  },
-  subtitle: {
-    fontSize: 20,
-    fontFamily: 'Karma-Regular',
-    textAlign: 'center',
-    color: '#000000',
-    marginBottom: 24,
-  },
-  image: {
-    width: 303,
-    height: 418,
-    marginBottom: 32,
-  },
-  button: {
-    backgroundColor: '#00223D',
-    paddingHorizontal: 36,
-    paddingVertical: 14,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontFamily: 'Karma-Bold',
-    fontWeight: '600',
-  },
-});

@@ -2,10 +2,10 @@ import React, { useRef } from 'react';
 import { 
     View, 
     Text, 
-    StyleSheet,
     ScrollView, 
     Platform,
 } from 'react-native';
+import styles from './LandmarkDetailsScreen.styles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack'; 
 import WebView from 'react-native-webview';
 import { WebView as WebViewType } from 'react-native-webview';
@@ -87,46 +87,3 @@ const LandmarkDetailsScreen = ({ route, navigation }: Props) => {
 
 export default LandmarkDetailsScreen;
 
-const styles = StyleSheet.create({
-    container: { 
-        flex: 1, 
-        backgroundColor: '#E0F2FE' 
-    },
-    mapContainer: { 
-        width: '100%', 
-        height: 250, 
-        backgroundColor: '#E0F2FE', 
-        borderRadius: 10 
-    },
-    map: { 
-        flex: 1 
-    }, 
-
-    detailsContent: { 
-        padding: 20 
-    },
-    title: { 
-        fontSize: 28, 
-        fontWeight: 'bold', 
-        marginBottom: 20, 
-        color: '#00223D' 
-    },
-    detailCard: {
-        backgroundColor: '#C3E2F1', 
-        padding: 15,
-        borderRadius: 8,
-        marginBottom: 10,
-        borderLeftWidth: 3,
-        borderLeftColor: '#00223D', // Ensure border color is defined
-    },
-    label: { 
-        fontSize: 14, 
-        fontWeight: '600', 
-        color: '#00223D' 
-    },
-    value: { 
-        fontSize: 18, 
-        marginTop: 2, 
-        color: '#00223D' 
-    },
-});

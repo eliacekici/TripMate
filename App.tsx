@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { getStoredAuth } from './src/utils/auth';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import SplashScreen from './src/screens/SplashScreen';
@@ -42,17 +43,30 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  const [initialRoute, setInitialRoute] = useState<keyof RootStackParamList | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { token, userId } = await getStoredAuth();
+      if (token && userId) {
+        setInitialRoute('DashboardMyPlansScreen');
+      } else {
+        setInitialRoute('Splash');
+      }
+      setLoading(false);
+    };
+    checkAuth();
+  }, []);
+
+  if (loading) return null;
+
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* First screen when the app opens */}
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
         <Stack.Screen name="Splash" component={SplashScreen} />
-
-        {/* Onboarding screens */}
         <Stack.Screen name="Onboarding1" component={OnboardingScreen_1} />
         <Stack.Screen name="Onboarding2" component={OnboardingScreen_2} />
-
-        {/* Main app screen */}
         <Stack.Screen name="DashboardGuides" component={DashboardGuides} />
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
         <Stack.Screen name="CityDetailsScreen" component={CityDetailsScreen} />

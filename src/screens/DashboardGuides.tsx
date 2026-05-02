@@ -3,7 +3,6 @@ import {
   Dimensions,
   View,
   Text,
-  StyleSheet,
   Image,
   FlatList,
   TouchableOpacity,
@@ -11,6 +10,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import styles from './DashboardGuides.styles';
 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -40,115 +40,60 @@ const DashboardGuides = () => {
   const FOOTER_PADDING = (Platform.OS === 'ios' ? 30 : 5) + 10 + 60;
 
   return (
-    <SafeAreaView style={styles.safe}>
-        <ScrollView style={{ flex: 1 }}> 
-            <Image
-                source={require('../assets/images/dashboard_top.png')}
-                style={styles.topImage}
-                resizeMode="cover"
-            />
 
-            <View style={styles.container}>
-                <TouchableOpacity
-                    style={styles.searchBar}
-                    onPress={() => navigation.navigate('SearchScreen')}
-                >
-                    <Text style={styles.searchInput}>Search location to find a guide</Text>
-                    <Image
-                        source={require('../assets/images/search_icon.png')}
-                        style={styles.searchImage}
-                        resizeMode="contain"
-                    />
-                </TouchableOpacity>
+    <SafeAreaView style={styles.safe}>
+      <ScrollView style={{ flex: 1 }}>
+        <Image
+          source={require('../assets/images/dashboard_top.png')}
+          style={styles.topImage}
+          resizeMode="cover"
+        />
 
-                <FlatList
-                    data={places}
-                    numColumns={3}
-                    keyExtractor={(item) => item.id}
-                    contentContainerStyle={{ paddingVertical: 16 }}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.placeItem}
-                            onPress={() =>
-                                navigation.navigate('CityDetailsScreen', { city: item.name })
-                            }
-                        >
-                            <Image source={item.image} style={styles.placeImage} />
-                            <Text style={styles.placeName}>{item.name}</Text>
-                        </TouchableOpacity>
-                    )}
-                />
-            </View>
-            
-            {/* 4. Add the padding View BEFORE the end of the ScrollView */}
-            <View style={{ height: FOOTER_PADDING }} />
-            
-        </ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.searchBar}
+            onPress={() => navigation.navigate('SearchScreen')}
+          >
+            <Text style={styles.searchInput}>Search location to find a guide</Text>
+            <Image
+              source={require('../assets/images/search_icon.png')}
+              style={styles.searchImage}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
 
-        <AppFooter 
-            navigation={navigation} 
-            //Set the active tab to 'DashboardGuides'
-            activeScreen={'DashboardGuides'} 
-        />
-    </SafeAreaView>
+          <FlatList
+            data={places}
+            numColumns={3}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingVertical: 16 }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.placeItem}
+                onPress={() =>
+                  navigation.navigate('CityDetailsScreen', { city: item.name })
+                }
+              >
+                <Image source={item.image} style={styles.placeImage} />
+                <Text style={styles.placeName}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+
+        {/* 4. Add the padding View BEFORE the end of the ScrollView */}
+        <View style={{ height: FOOTER_PADDING }} />
+
+      </ScrollView>
+
+      <AppFooter 
+        navigation={navigation} 
+        //Set the active tab to 'DashboardGuides'
+        activeScreen={'DashboardGuides'} 
+      />
+    </SafeAreaView>
   );
 };
 
 export default DashboardGuides;
 
-
-const styles = StyleSheet.create({ 
-    safe: { 
-        flex: 1, 
-        backgroundColor: '#E0F2FE' 
-    }, 
-    topImage: { 
-        width: '100%', 
-        height: SCREEN_WIDTH * 0.48, 
-    }, 
-    container: { 
-        flex: 1, 
-        backgroundColor: '#E0F2FE', 
-        borderTopLeftRadius: 10, 
-        borderTopRightRadius: 10, 
-        paddingHorizontal: SCREEN_WIDTH * 0.04,
-        marginTop: -24, 
-        paddingTop: 24, 
-    }, 
-    searchBar: { 
-        flexDirection: 'row', 
-        alignItems: 'center', 
-        backgroundColor: '#C3E2F1', 
-        borderRadius: 10, 
-        paddingHorizontal: 10, 
-        paddingVertical: 10, 
-        marginBottom: 16, 
-    }, 
-    searchInput: { 
-        flex: 1, 
-        fontSize: 16, 
-        fontFamily: 'Karma-Bold', 
-        fontWeight: '700', 
-        marginRight: 8, 
-    }, 
-    searchImage: { 
-        width: 19, 
-        height: 19, 
-    }, 
-    placeItem: { 
-        alignItems: 'center', 
-        marginBottom: 16, 
-        flex: 1 / 3, 
-    }, 
-    placeImage: { 
-        width: SCREEN_WIDTH * 0.22, 
-        height: SCREEN_WIDTH * 0.22,
-        borderRadius: (SCREEN_WIDTH * 0.22) / 2, 
-        marginBottom: 8, 
-    }, 
-    placeName: { 
-        fontSize: 10, 
-        fontFamily: 'Karma-Bold', 
-        textAlign: 'center', 
-    }, 
-});
