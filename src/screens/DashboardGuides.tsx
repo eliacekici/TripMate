@@ -1,23 +1,17 @@
 import React from 'react';
 import {
-  Dimensions,
-  View,
-  Text,
-  Image,
-  FlatList,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-  Platform,
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import styles from './DashboardGuides.styles';
-
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import AppFooter from './AppFooter'; 
 import { RootStackParamList } from '../../App';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const places = [
   { id: '1', name: 'Paris', image: require('../assets/images/Paris.png') },
@@ -36,10 +30,9 @@ const places = [
 
 const DashboardGuides = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-  const FOOTER_PADDING = (Platform.OS === 'ios' ? 30 : 5) + 10 + 60;
-
-  return (
+  const insets = useSafeAreaInsets();
+  // Footer height ≈ paddingTop(10) + icon(40) + text(16) + spacing(10) + bottom inset
+  const FOOTER_PADDING = 10 + 40 + 16 + 10 + Math.max(insets.bottom, 8) + 10;
 
     <SafeAreaView style={styles.safe}>
       <ScrollView style={{ flex: 1 }}>

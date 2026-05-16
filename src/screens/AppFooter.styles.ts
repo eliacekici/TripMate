@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const PRIMARY_ACTIVE_COLOR = '#0C1559';
 const INACTIVE_COLOR = '#000000';
@@ -9,14 +9,15 @@ const footerStyles = StyleSheet.create({
         flexDirection: 'row',
         borderTopWidth: 1,
         borderColor: PRIMARY_ACTIVE_COLOR,
-        paddingVertical: 10,
+        paddingTop: 10,
+        paddingHorizontal: 10,
         justifyContent: 'space-around',
         backgroundColor: FOOTER_BG_COLOR,
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        paddingBottom: Platform.OS === 'ios' ? 30 : 5,
+        // paddingBottom is set dynamically in AppFooter.tsx via useSafeAreaInsets
     },
     footerItem: {
         alignItems: 'center',

@@ -168,9 +168,13 @@ const DashboardMyPlansScreen = () => {
                     if (data.tripPlans && data.tripPlans.length > 0) {
                         // Use the most recent trip (last in array)
                         const lastTrip = data.tripPlans[data.tripPlans.length - 1];
-                        setDestination(lastTrip.destination);
-                        setStartDate(new Date(lastTrip.start_date));
-                        setEndDate(new Date(lastTrip.end_date));
+                        // Immediately navigate to CreatingPlanEmptyScreen with destination
+                        navigation.replace('CreatingPlanEmptyScreen', {
+                            destination: lastTrip.destination,
+                            tripStartDate: lastTrip.start_date,
+                            tripEndDate: lastTrip.end_date,
+                        });
+                        return;
                     }
                 } catch (e) {
                     // ignore fetch errors, just show empty
@@ -361,7 +365,11 @@ const DashboardMyPlansScreen = () => {
                         text: 'OK',
                         onPress: () => {
                             setTimeout(() => {
-                            navigation.navigate('CreatingPlanEmptyScreen', { destination });
+                            navigation.navigate('CreatingPlanEmptyScreen', {
+                                destination,
+                                tripStartDate: startDate.toISOString(),
+                                tripEndDate: endDate.toISOString(),
+                            });
                             }, 100); // 100ms delay ensures the alert fully closes first
                         },
                     },

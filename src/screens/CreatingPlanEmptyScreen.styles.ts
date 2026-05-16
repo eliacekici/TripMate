@@ -24,6 +24,41 @@ const styles = StyleSheet.create({
   },
   emptySpace: {
     flex: 1,
+    paddingHorizontal: 14,
+  },
+  savedHotelsContainer: {
+    paddingBottom: 170,
+  },
+  savedHotelsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#00223D',
+    marginBottom: 10,
+    fontFamily: 'Labrada-Bold',
+  },
+  savedHotelsEmpty: {
+    fontSize: 13,
+    color: '#34556b',
+    marginBottom: 10,
+  },
+  savedHotelCard: {
+    backgroundColor: '#C3E2F1',
+    borderColor: '#00223D',
+    borderWidth: 1,
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 10,
+  },
+  savedHotelName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#00223D',
+    marginBottom: 6,
+  },
+  savedHotelDate: {
+    fontSize: 13,
+    color: '#243746',
+    marginBottom: 2,
   },
   bottomContainer: {
     position: 'absolute',

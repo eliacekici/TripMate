@@ -14,7 +14,11 @@ import MyPlansLoggedOutScreen from './src/screens/MyPlansLoggedOutScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import DashboardMyPlansScreen from './src/screens/DashboardMyPlansScreen';
+
 import CreatingPlanEmptyScreen from './src/screens/CreatingPlanEmptyScreen';
+import FlightTicketScannerScreen from './src/screens/FlightTicketScannerScreen';
+import HotelSearchScreen from './src/screens/HotelSearchScreen';
+import HotelDetailsScreen from './src/screens/HotelDetailsScreen';
 
 export type RootStackParamList = {
   Splash: undefined;
@@ -36,7 +40,10 @@ export type RootStackParamList = {
   SignUpScreen: undefined;
   LoginScreen: undefined;
   DashboardMyPlansScreen: undefined;
-  CreatingPlanEmptyScreen: { destination: string };
+  CreatingPlanEmptyScreen: { destination: string; tripStartDate?: string; tripEndDate?: string };
+  FlightTicketScannerScreen: undefined;
+  HotelSearchScreen: { destination?: string; tripStartDate?: string; tripEndDate?: string } | undefined;
+  HotelDetailsScreen: { hotel: any };
   
 };
 
@@ -69,6 +76,9 @@ export default function App() {
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="DashboardMyPlansScreen" component={DashboardMyPlansScreen} />
         <Stack.Screen name="CreatingPlanEmptyScreen" component={CreatingPlanEmptyScreen} />
+        <Stack.Screen name="FlightTicketScannerScreen" component={FlightTicketScannerScreen} />
+        <Stack.Screen name="HotelSearchScreen" component={HotelSearchScreen} />
+        <Stack.Screen name="HotelDetailsScreen" component={HotelDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

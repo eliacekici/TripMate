@@ -1,4 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+// Original aspect ratio: 303 × 418 (tall portrait image)
+// Cap height at 45% of screen height so it never overflows on small screens
+const IMAGE_HEIGHT = Math.round(Math.min(SCREEN_HEIGHT * 0.45, 418));
+const IMAGE_WIDTH = Math.round(IMAGE_HEIGHT * (303 / 418));
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: '#E0F2FE' },
@@ -24,8 +30,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   image: {
-    width: 303,
-    height: 418,
+    width: IMAGE_WIDTH,
+    height: IMAGE_HEIGHT,
     marginBottom: 32,
   },
   button: {

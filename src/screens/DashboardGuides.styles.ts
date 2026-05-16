@@ -1,6 +1,16 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+// Responsive grid calculations
+const H_PADDING = Math.round(SCREEN_WIDTH * 0.04) * 2; // paddingHorizontal * 2 sides
+const GRID_MARGIN = 8; // margin on each side of a grid item
+const NUM_COLUMNS = 3;
+// Each item occupies (total width - horizontal container padding - all item margins) / numColumns
+const ITEM_WIDTH = Math.floor(
+  (SCREEN_WIDTH - H_PADDING - GRID_MARGIN * 2 * NUM_COLUMNS) / NUM_COLUMNS
+);
+const IMAGE_SIZE = Math.round(ITEM_WIDTH * 0.65);
+
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
@@ -43,16 +53,14 @@ const styles = StyleSheet.create({
   placeItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    minWidth: 110, // Match increased city name width
-    margin: 8,
-    // Ensures equal spacing between items in the row and from row to row
+    width: ITEM_WIDTH,
+    margin: GRID_MARGIN,
   },
   placeImage: {
-    width: 70,
-    height: 70,
+    width: IMAGE_SIZE,
+    height: IMAGE_SIZE,
     marginBottom: 8,
-    borderRadius: 35, // Make image fully round
+    borderRadius: IMAGE_SIZE / 2,
     resizeMode: 'cover',
   },
     cityListContent: {
@@ -63,10 +71,10 @@ const styles = StyleSheet.create({
       paddingHorizontal: 0,
     },
   placeName: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '700',
     color: '#00223D',
-    width: 110, // Increased width to fit 'Amsterdam'
+    width: ITEM_WIDTH,
     textAlign: 'center',
     alignSelf: 'center',
   },

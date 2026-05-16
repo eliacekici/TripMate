@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   Dimensions,
   ImageBackground,
+  ScrollView,
 } from 'react-native';
 import styles from './CreatingPlanEmptyScreen.styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../App'; 
 import AppFooter from './AppFooter';
+import { getSavedHotelPlans } from '../services/BookingApi';
 
 import { UNSPLASH_ACCESS_KEY} from '@env';
 
@@ -20,6 +23,8 @@ interface CreatingPlanEmptyScreenProps {
   route: {
     params: {
       destination: string;
+      tripStartDate?: string;
+      tripEndDate?: string;
     };
   };
   navigation: NativeStackNavigationProp<RootStackParamList>;
@@ -33,10 +38,25 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
   route,
   navigation,
 }) => {
-  const { destination } = route.params;
+  const { destination, tripStartDate, tripEndDate } = route.params;
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [showTooltip, setShowTooltip] = useState(true);
   const [showCategoryFooter, setShowCategoryFooter] = useState(false);
+  const [savedHotels, setSavedHotels] = useState<any[]>([]);
+
+  const toYmd = (value?: string): string | null => {
+    if (!value) return null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const tripStart = useMemo(() => toYmd(tripStartDate), [tripStartDate]);
+  const tripEnd = useMemo(() => toYmd(tripEndDate), [tripEndDate]);
 
   useEffect(() => {
     // Fetch a photo from Unsplash API based on the destination
@@ -70,6 +90,29 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
     return () => clearTimeout(timer);
   }, [destination]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const loadSavedHotels = async () => {
+        const plans = await getSavedHotelPlans();
+
+        const filtered = plans.filter((plan: any) => {
+          if (!tripStart || !tripEnd) return true;
+
+          const checkin = toYmd(String(plan?.checkin || ''));
+          const checkout = toYmd(String(plan?.checkout || ''));
+          if (!checkin || !checkout) return false;
+          const inTripRange = checkin >= tripStart && checkout <= tripEnd;
+
+          return inTripRange;
+        });
+
+        setSavedHotels(filtered);
+      };
+
+      loadSavedHotels();
+    }, [destination, tripStart, tripEnd])
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Top Image */}
@@ -89,8 +132,25 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
       </View>
       {/* ------------------------------------------- */}
 
-      {/* Middle empty space */}
-      <View style={styles.emptySpace} />
+      {/* Saved hotels section */}
+      <View style={styles.emptySpace}>
+        <ScrollView
+          contentContainerStyle={styles.savedHotelsContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.savedHotelsTitle}>Saved Hotels</Text>
+          {savedHotels.length === 0 && (
+            <Text style={styles.savedHotelsEmpty}>No saved hotels yet.</Text>
+          )}
+          {savedHotels.map((plan: any) => (
+            <View key={plan.id} style={styles.savedHotelCard}>
+              <Text style={styles.savedHotelName}>{plan?.hotel?.hotel_name || 'Unnamed hotel'}</Text>
+              <Text style={styles.savedHotelDate}>Check-in: {plan?.checkin || 'N/A'}</Text>
+              <Text style={styles.savedHotelDate}>Check-out: {plan?.checkout || 'N/A'}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
 
       {/* Bottom plus button and tooltip */}
       <View style={styles.bottomContainer}>
@@ -112,8 +172,12 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
       {/* Category Footer Overlay */}
       {showCategoryFooter && (
         <View style={styles.categoryFooterOverlay}>
-          <CategoryIcon label="Flight" image={require('../assets/images/flight.png')} onPress={() => {}} />
-          <CategoryIcon label="Hotel" image={require('../assets/images/hotel.png')} onPress={() => {}} />
+          <CategoryIcon label="Flight" image={require('../assets/images/flight.png')} onPress={() => navigation.navigate('FlightTicketScannerScreen')} />
+          <CategoryIcon
+            label="Hotel"
+            image={require('../assets/images/hotel.png')}
+            onPress={() => navigation.navigate('HotelSearchScreen', { destination, tripStartDate, tripEndDate })}
+          />
           <CategoryIcon label="Food" image={require('../assets/images/food.png')} onPress={() => {}} />
           <CategoryIcon label="Spots" image={require('../assets/images/spots.png')} onPress={() => {}} />
           <CategoryIcon label="Transport" image={require('../assets/images/transportation.png')} onPress={() => {}} />

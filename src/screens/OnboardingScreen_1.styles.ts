@@ -1,4 +1,10 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+// 48 = paddingHorizontal(24) * 2 sides
+const IMAGE_WIDTH = SCREEN_WIDTH - 48;
+// Preserve original aspect ratio: 393 × 356
+const IMAGE_HEIGHT = Math.round(IMAGE_WIDTH * (356 / 393));
 
 const styles = StyleSheet.create({
   safe: {
@@ -27,8 +33,8 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   image: {
-    width: 393,
-    height: 356,
+    width: IMAGE_WIDTH,
+    height: IMAGE_HEIGHT,
     marginBottom: 32,
   },
   button: {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, Image, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import footerStyles from './AppFooter.styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'; 
 import { RootStackParamList } from '../../App';
@@ -18,6 +19,7 @@ const INACTIVE_COLOR = '#000000';
 const FOOTER_BG_COLOR = '#C3E2F1'; 
 
 const AppFooter: React.FC<FooterProps> = ({ navigation, activeScreen }) => { 
+    const insets = useSafeAreaInsets();
     // Define the tabs, their screen name, and asset location once 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     useEffect(() => {
@@ -54,7 +56,7 @@ const AppFooter: React.FC<FooterProps> = ({ navigation, activeScreen }) => {
     };
 
     return (         
-        <View style={footerStyles.footer}>             
+        <View style={[footerStyles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}>             
             {tabs.map((tab) => {                 
                 // Determine if the current tab matches the screen being viewed                 
                 const isActive = tab.screen === activeScreen;                 
