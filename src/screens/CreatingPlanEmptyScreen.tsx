@@ -7,6 +7,7 @@ import {
   Dimensions,
   ImageBackground,
   ScrollView,
+  Alert,
 } from 'react-native';
 import styles from './CreatingPlanEmptyScreen.styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,7 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../App'; 
 import AppFooter from './AppFooter';
-import { getSavedHotelPlans } from '../services/BookingApi';
+import { deleteSavedTicketPlan, getSavedHotelPlans, getSavedTicketPlans } from '../services/BookingApi';
 
 import { UNSPLASH_ACCESS_KEY} from '@env';
 
@@ -43,6 +44,31 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
   const [showTooltip, setShowTooltip] = useState(true);
   const [showCategoryFooter, setShowCategoryFooter] = useState(false);
   const [savedHotels, setSavedHotels] = useState<any[]>([]);
+  const [savedTickets, setSavedTickets] = useState<any[]>([]);
+  const [selectedTicketToDelete, setSelectedTicketToDelete] = useState<string | null>(null);
+
+  const confirmDeleteTicket = (ticketId: string) => {
+    Alert.alert(
+      'Delete ticket',
+      'Are you sure you want to delete this ticket?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => setSelectedTicketToDelete(null),
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteSavedTicketPlan(ticketId);
+            setSavedTickets((current) => current.filter((ticket) => ticket.id !== ticketId));
+            setSelectedTicketToDelete(null);
+          },
+        },
+      ]
+    );
+  };
 
   const toYmd = (value?: string): string | null => {
     if (!value) return null;
@@ -57,6 +83,27 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
 
   const tripStart = useMemo(() => toYmd(tripStartDate), [tripStartDate]);
   const tripEnd = useMemo(() => toYmd(tripEndDate), [tripEndDate]);
+
+  // Compute sorted groups based on when each type was first saved
+  const sortedGroups = useMemo(() => {
+    const groups: Array<{ type: 'hotels' | 'tickets'; items: any[]; title: string }> = [];
+
+    if (savedHotels.length > 0) {
+      groups.push({ type: 'hotels', items: savedHotels, title: 'Saved Hotels' });
+    }
+    if (savedTickets.length > 0) {
+      groups.push({ type: 'tickets', items: savedTickets, title: 'Ticket Information' });
+    }
+
+    // Sort by the earliest createdAt in each group
+    groups.sort((a, b) => {
+      const aEarliest = Math.min(...a.items.map((item) => item.createdAt || Infinity));
+      const bEarliest = Math.min(...b.items.map((item) => item.createdAt || Infinity));
+      return aEarliest - bEarliest;
+    });
+
+    return groups;
+  }, [savedHotels, savedTickets]);
 
   useEffect(() => {
     // Fetch a photo from Unsplash API based on the destination
@@ -109,7 +156,23 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
         setSavedHotels(filtered);
       };
 
+      const loadSavedTickets = async () => {
+        const plans = await getSavedTicketPlans();
+
+        const filtered = plans.filter((ticket: any) => {
+          if (!destination) return true;
+          return (
+            String(ticket.destination || '')
+              .trim()
+              .toLowerCase() === destination.trim().toLowerCase()
+          );
+        });
+
+        setSavedTickets(filtered);
+      };
+
       loadSavedHotels();
+      loadSavedTickets();
     }, [destination, tripStart, tripEnd])
   );
 
@@ -132,25 +195,69 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
       </View>
       {/* ------------------------------------------- */}
 
-      {/* Saved hotels section */}
-      <View style={styles.emptySpace}>
-        <ScrollView
-          contentContainerStyle={styles.savedHotelsContainer}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={styles.savedHotelsTitle}>Saved Hotels</Text>
-          {savedHotels.length === 0 && (
-            <Text style={styles.savedHotelsEmpty}>No saved hotels yet.</Text>
-          )}
-          {savedHotels.map((plan: any) => (
-            <View key={plan.id} style={styles.savedHotelCard}>
-              <Text style={styles.savedHotelName}>{plan?.hotel?.hotel_name || 'Unnamed hotel'}</Text>
-              <Text style={styles.savedHotelDate}>Check-in: {plan?.checkin || 'N/A'}</Text>
-              <Text style={styles.savedHotelDate}>Check-out: {plan?.checkout || 'N/A'}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
+      {/* Dynamically ordered saved items - groups appear based on when first saved */}
+      {sortedGroups.length > 0 && (
+        <View style={styles.emptySpace}>
+          <ScrollView
+            contentContainerStyle={styles.savedHotelsContainer}
+            showsVerticalScrollIndicator={false}
+          >
+            {sortedGroups.map((group) => (
+              <View key={group.type}>
+                <Text style={styles.savedHotelsTitle}>{group.title}</Text>
+                {group.type === 'hotels' &&
+                  group.items.map((plan: any) => (
+                    <View key={plan.id} style={styles.savedHotelCard}>
+                      <Text style={styles.savedHotelName}>{plan?.hotel?.hotel_name || 'Unnamed hotel'}</Text>
+                      <Text style={styles.savedHotelDate}>Check-in: {plan?.checkin || 'N/A'}</Text>
+                      <Text style={styles.savedHotelDate}>Check-out: {plan?.checkout || 'N/A'}</Text>
+                    </View>
+                  ))}
+                {group.type === 'tickets' &&
+                  group.items.map((ticket: any) => (
+                    <TouchableOpacity
+                      key={ticket.id}
+                      style={styles.savedHotelCard}
+                      onLongPress={() => setSelectedTicketToDelete(ticket.id)}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.savedHotelName}>{ticket.airline || 'Saved Ticket'}</Text>
+                      {ticket.passengerName ? (
+                        <Text style={styles.savedHotelDate}>Passenger: {ticket.passengerName}</Text>
+                      ) : null}
+                      {ticket.gate ? (
+                        <Text style={styles.savedHotelDate}>Gate: {ticket.gate}</Text>
+                      ) : null}
+                      {ticket.departureTime ? (
+                        <Text style={styles.savedHotelDate}>Departure Time: {ticket.departureTime}</Text>
+                      ) : null}
+                      {ticket.seat ? (
+                        <Text style={styles.savedHotelDate}>Seat: {ticket.seat}</Text>
+                      ) : null}
+                    </TouchableOpacity>
+                  ))}
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      )}
+
+      {selectedTicketToDelete && (
+        <View style={styles.deleteBar}>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => confirmDeleteTicket(selectedTicketToDelete)}
+          >
+            <Text style={styles.deleteButtonText}>Delete Ticket</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.deleteCancelButton}
+            onPress={() => setSelectedTicketToDelete(null)}
+          >
+            <Text style={styles.deleteCancelButtonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Bottom plus button and tooltip */}
       <View style={styles.bottomContainer}>
@@ -172,7 +279,17 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
       {/* Category Footer Overlay */}
       {showCategoryFooter && (
         <View style={styles.categoryFooterOverlay}>
-          <CategoryIcon label="Flight" image={require('../assets/images/flight.png')} onPress={() => navigation.navigate('FlightTicketScannerScreen')} />
+          <CategoryIcon
+            label="Flight"
+            image={require('../assets/images/flight.png')}
+            onPress={() =>
+              navigation.navigate('FlightTicketScannerScreen', {
+                destination,
+                tripStartDate,
+                tripEndDate,
+              })
+            }
+          />
           <CategoryIcon
             label="Hotel"
             image={require('../assets/images/hotel.png')}

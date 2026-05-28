@@ -109,29 +109,38 @@ const getOSMPlaces = async (lat: number, lon: number, limit: number): Promise<an
         out ${limit} center;
     `;
     
-    const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
-    
-    const response = await fetch("https://overpass-api.de/api/interpreter", {
-        method: "POST",
-        headers: {
-            "Content-Type": "text/plain"
-        },
-        body: query
-    });
+    const overpassUrls = [
+        'https://overpass-api.de/api/interpreter',
+        'https://lz4.overpass-api.de/api/interpreter',
+        'https://overpass.kumi.systems/api/interpreter',
+    ];
 
-    if (!response.ok) {
-        const error = await response.text();
-        console.error("Overpass API Error:", response.status, error);
-        return [];
+    for (const url of overpassUrls) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain; charset=utf-8',
+                    'Accept': 'application/json',
+                    'User-Agent': 'TripMateApp/1.0 (elia.cekici@gmail.com)',
+                },
+                body: query,
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                console.warn('Overpass API Error from', url, response.status, error);
+                continue;
+            }
+
+            const data = await response.json();
+            return data.elements || [];
+        } catch (e) {
+            console.warn('Overpass fetch failed for', url, e);
+        }
     }
 
-    try {
-        const data = await response.json();
-        return data.elements || [];
-    } catch (e) {
-        console.error("Overpass JSON Parse Failed:", e);
-        return [];
-    }
+    return [];
 };
 
 const getWikipediaArticles = async (lat: number, lon: number, limit: number): Promise<any[]> => {

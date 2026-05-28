@@ -15,6 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AppFooter from './AppFooter'; 
 import { RootStackParamList } from '../../App';
+import { apiFetch } from '../services/apiClient';
 
 import { styles, COLORS } from './SignUpScreen.styles';
 
@@ -80,7 +81,7 @@ const SignUpScreen = () => {
   setIsLoading(true);
 
   try {
-    const response = await fetch('http://10.0.2.2:5000/api/auth/signup', {
+    const response = await apiFetch('/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

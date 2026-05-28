@@ -11,6 +11,6 @@ app.use('/api/auth', authRoutes);
 
 app.use('/api/trip-plans', tripPlanRoutes);
 
-app.listen(5000, () => {
+app.listen(5000, '0.0.0.0', () => {
   console.log('TripMate backend running on http://localhost:5000');
 });

@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppFooter from './AppFooter'; 
 import { RootStackParamList } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { apiFetch } from '../services/apiClient';
 
 
 import { styles, COLORS } from './LoginScreen.styles';
@@ -50,7 +51,7 @@ const LoginScreen = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://10.0.2.2:5000/api/auth/login', {
+      const response = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

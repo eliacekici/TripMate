@@ -5,12 +5,12 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import AppFooter from './AppFooter'; 
+import AppFooter from './AppFooter';
+import styles from './DashboardGuides.styles';
 import { RootStackParamList } from '../../App';
 
 const places = [
@@ -29,63 +29,59 @@ const places = [
 ];
 
 const DashboardGuides = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const insets = useSafeAreaInsets();
-  // Footer height ≈ paddingTop(10) + icon(40) + text(16) + spacing(10) + bottom inset
   const FOOTER_PADDING = 10 + 40 + 16 + 10 + Math.max(insets.bottom, 8) + 10;
 
-    <SafeAreaView style={styles.safe}>
-      <ScrollView style={{ flex: 1 }}>
-        <Image
-          source={require('../assets/images/dashboard_top.png')}
-          style={styles.topImage}
-          resizeMode="cover"
-        />
+  const renderHeader = () => (
+    <View>
+      <Image
+        source={require('../assets/images/dashboard_top.png')}
+        style={styles.topImage}
+        resizeMode="cover"
+      />
 
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.searchBar}
-            onPress={() => navigation.navigate('SearchScreen')}
-          >
-            <Text style={styles.searchInput}>Search location to find a guide</Text>
-            <Image
-              source={require('../assets/images/search_icon.png')}
-              style={styles.searchImage}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-
-          <FlatList
-            data={places}
-            numColumns={3}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={{ paddingVertical: 16 }}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.placeItem}
-                onPress={() =>
-                  navigation.navigate('CityDetailsScreen', { city: item.name })
-                }
-              >
-                <Image source={item.image} style={styles.placeImage} />
-                <Text style={styles.placeName}>{item.name}</Text>
-              </TouchableOpacity>
-            )}
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.searchBar}
+          onPress={() => navigation.navigate('SearchScreen')}
+        >
+          <Text style={styles.searchInput}>Search location to find a guide</Text>
+          <Image
+            source={require('../assets/images/search_icon.png')}
+            style={styles.searchImage}
+            resizeMode="contain"
           />
-        </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 
-        {/* 4. Add the padding View BEFORE the end of the ScrollView */}
-        <View style={{ height: FOOTER_PADDING }} />
+  return (
+    <SafeAreaView style={styles.safe}>
+      <FlatList
+        data={places}
+        numColumns={3}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={renderHeader}
+        contentContainerStyle={{ paddingBottom: FOOTER_PADDING }}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.placeItem}
+            onPress={() => navigation.navigate('CityDetailsScreen', { city: item.name })}
+          >
+            <Image source={item.image} style={styles.placeImage} />
+            <Text style={styles.placeName}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
 
-      </ScrollView>
-
-      <AppFooter 
-        navigation={navigation} 
-        //Set the active tab to 'DashboardGuides'
-        activeScreen={'DashboardGuides'} 
+      <AppFooter
+        navigation={navigation}
+        activeScreen="DashboardGuides"
       />
     </SafeAreaView>
-  );
+  );
 };
 
 export default DashboardGuides;

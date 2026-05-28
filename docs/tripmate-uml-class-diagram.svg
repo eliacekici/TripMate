@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1800" viewBox="0 0 2400 1800" role="img" aria-labelledby="title desc">
+  <title id="title">TripMate UML Class Diagram</title>
+  <desc id="desc">A visual UML class diagram for the TripMate app, showing screens, services, backend routes, and database entities.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7fbff; }
+      .title { font: 700 34px Arial, sans-serif; fill: #0c1559; }
+      .subtitle { font: 400 16px Arial, sans-serif; fill: #36506b; }
+      .cluster { fill: #ffffff; stroke: #b6cbe0; stroke-width: 2; rx: 18; }
+      .box { fill: #ffffff; stroke: #243b53; stroke-width: 2; rx: 14; }
+      .boxBlue { fill: #ecf6ff; stroke: #2c5aa0; stroke-width: 2; rx: 14; }
+      .boxGreen { fill: #eefbf2; stroke: #2f7d32; stroke-width: 2; rx: 14; }
+      .boxGold { fill: #fff9e8; stroke: #9a6b00; stroke-width: 2; rx: 14; }
+      .label { font: 700 18px Arial, sans-serif; fill: #102a43; }
+      .small { font: 400 15px Arial, sans-serif; fill: #334e68; }
+      .tiny { font: 400 13px Arial, sans-serif; fill: #52606d; }
+      .line { stroke: #334e68; stroke-width: 2.2; fill: none; }
+      .dashed { stroke-dasharray: 7 6; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334e68" />
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="2400" height="1800" />
+  <text class="title" x="80" y="70">TripMate UML Class Diagram</text>
+  <text class="subtitle" x="80" y="100">React Native app, service layer, backend routes, and database entities</text>
+
+  <rect class="cluster" x="40" y="130" width="2320" height="560" />
+  <rect class="cluster" x="40" y="720" width="2320" height="430" />
+  <rect class="cluster" x="40" y="1180" width="2320" height="560" />
+
+  <text class="label" x="70" y="165">UI Layer</text>
+  <text class="label" x="70" y="755">Service Layer</text>
+  <text class="label" x="70" y="1215">Backend and Database</text>
+
+  <rect class="boxBlue" x="890" y="165" width="620" height="110" />
+  <text class="label" x="1140" y="205" text-anchor="middle">App</text>
+  <text class="tiny" x="1140" y="232" text-anchor="middle">NavigationContainer, SafeAreaProvider, RootStackParamList</text>
+  <text class="tiny" x="1140" y="254" text-anchor="middle">Initial route: DashboardGuides</text>
+
+  <rect class="box" x="90" y="320" width="300" height="85" />
+  <text class="label" x="240" y="354" text-anchor="middle">DashboardGuides</text>
+  <text class="tiny" x="240" y="378" text-anchor="middle">Home screen</text>
+
+  <rect class="box" x="420" y="320" width="260" height="85" />
+  <text class="label" x="550" y="354" text-anchor="middle">SearchScreen</text>
+  <text class="tiny" x="550" y="378" text-anchor="middle">Search city</text>
+
+  <rect class="box" x="710" y="320" width="260" height="85" />
+  <text class="label" x="840" y="354" text-anchor="middle">CityDetailsScreen</text>
+  <text class="tiny" x="840" y="378" text-anchor="middle">Attractions and food</text>
+
+  <rect class="box" x="1000" y="320" width="300" height="85" />
+  <text class="label" x="1150" y="354" text-anchor="middle">LandmarkDetailsScreen</text>
+  <text class="tiny" x="1150" y="378" text-anchor="middle">Map and place details</text>
+
+  <rect class="box" x="1330" y="320" width="250" height="85" />
+  <text class="label" x="1455" y="354" text-anchor="middle">LoginScreen</text>
+  <text class="tiny" x="1455" y="378" text-anchor="middle">Auth entry</text>
+
+  <rect class="box" x="1610" y="320" width="260" height="85" />
+  <text class="label" x="1740" y="354" text-anchor="middle">SignUpScreen</text>
+  <text class="tiny" x="1740" y="378" text-anchor="middle">Registration</text>
+
+  <rect class="box" x="1900" y="320" width="320" height="85" />
+  <text class="label" x="2060" y="354" text-anchor="middle">DashboardMyPlansScreen</text>
+  <text class="tiny" x="2060" y="378" text-anchor="middle">Trip planning calendar</text>
+
+  <rect class="box" x="220" y="450" width="280" height="85" />
+  <text class="label" x="360" y="484" text-anchor="middle">CreatingPlanEmptyScreen</text>
+  <text class="tiny" x="360" y="508" text-anchor="middle">Saved hotel plans</text>
+
+  <rect class="box" x="540" y="450" width="240" height="85" />
+  <text class="label" x="660" y="484" text-anchor="middle">FlightTicketScannerScreen</text>
+  <text class="tiny" x="660" y="508" text-anchor="middle">Flight flow</text>
+
+  <rect class="box" x="810" y="450" width="220" height="85" />
+  <text class="label" x="920" y="484" text-anchor="middle">HotelSearchScreen</text>
+  <text class="tiny" x="920" y="508" text-anchor="middle">Hotel search</text>
+
+  <rect class="box" x="1060" y="450" width="220" height="85" />
+  <text class="label" x="1170" y="484" text-anchor="middle">HotelDetailsScreen</text>
+  <text class="tiny" x="1170" y="508" text-anchor="middle">Hotel details</text>
+
+  <rect class="box" x="1310" y="450" width="260" height="85" />
+  <text class="label" x="1440" y="484" text-anchor="middle">MyPlansLoggedOutScreen</text>
+  <text class="tiny" x="1440" y="508" text-anchor="middle">Guest view</text>
+
+  <rect class="box" x="1610" y="450" width="260" height="85" />
+  <text class="label" x="1740" y="484" text-anchor="middle">SplashScreen</text>
+  <text class="tiny" x="1740" y="508" text-anchor="middle">Startup view</text>
+
+  <rect class="box" x="1900" y="450" width="320" height="85" />
+  <text class="label" x="2060" y="484" text-anchor="middle">OnboardingScreen_1</text>
+  <text class="tiny" x="2060" y="508" text-anchor="middle">First onboarding page</text>
+
+  <rect class="box" x="1900" y="545" width="320" height="85" />
+  <text class="label" x="2060" y="579" text-anchor="middle">OnboardingScreen_2</text>
+  <text class="tiny" x="2060" y="603" text-anchor="middle">Second onboarding page</text>
+
+  <rect class="boxGreen" x="180" y="810" width="330" height="110" />
+  <text class="label" x="345" y="848" text-anchor="middle">apiClient</text>
+  <text class="tiny" x="345" y="875" text-anchor="middle">apiFetch(path, init)</text>
+  <text class="tiny" x="345" y="897" text-anchor="middle">Uses getApiBaseUrls</text>
+
+  <rect class="boxGreen" x="560" y="810" width="330" height="110" />
+  <text class="label" x="725" y="848" text-anchor="middle">apiBaseUrl</text>
+  <text class="tiny" x="725" y="875" text-anchor="middle">getApiBaseUrls()</text>
+  <text class="tiny" x="725" y="897" text-anchor="middle">getApiBaseUrl()</text>
+
+  <rect class="boxGreen" x="940" y="810" width="430" height="110" />
+  <text class="label" x="1155" y="848" text-anchor="middle">BookingApi</text>
+  <text class="tiny" x="1155" y="875" text-anchor="middle">getCityDestId, searchHotels, getHotelDetails</text>
+  <text class="tiny" x="1155" y="897" text-anchor="middle">saveHotelPlan, getSavedHotelPlans, buildReservationUrl</text>
+
+  <rect class="boxGreen" x="1420" y="810" width="300" height="110" />
+  <text class="label" x="1570" y="848" text-anchor="middle">authUtils</text>
+  <text class="tiny" x="1570" y="875" text-anchor="middle">getStoredAuth()</text>
+  <text class="tiny" x="1570" y="897" text-anchor="middle">clearAuth()</text>
+
+  <rect class="boxGreen" x="1760" y="810" width="450" height="110" />
+  <text class="label" x="1985" y="848" text-anchor="middle">OpenSourcePlacesService</text>
+  <text class="tiny" x="1985" y="875" text-anchor="middle">searchAttractions, searchFoodAndDrinks, getPlacePhotoUrl</text>
+  <text class="tiny" x="1985" y="897" text-anchor="middle">Used by CityDetailsScreen</text>
+
+  <rect class="boxGold" x="220" y="1260" width="340" height="110" />
+  <text class="label" x="390" y="1298" text-anchor="middle">BackendServer</text>
+  <text class="tiny" x="390" y="1325" text-anchor="middle">Express app listening on 5000</text>
+  <text class="tiny" x="390" y="1347" text-anchor="middle">Mounts auth and trip plan routes</text>
+
+  <rect class="boxGold" x="620" y="1260" width="330" height="110" />
+  <text class="label" x="785" y="1298" text-anchor="middle">AuthRoutes</text>
+  <text class="tiny" x="785" y="1325" text-anchor="middle">POST /signup</text>
+  <text class="tiny" x="785" y="1347" text-anchor="middle">POST /login</text>
+
+  <rect class="boxGold" x="1000" y="1260" width="330" height="110" />
+  <text class="label" x="1165" y="1298" text-anchor="middle">TripPlanRoutes</text>
+  <text class="tiny" x="1165" y="1325" text-anchor="middle">POST /</text>
+  <text class="tiny" x="1165" y="1347" text-anchor="middle">GET /:userId</text>
+
+  <rect class="boxGold" x="1380" y="1260" width="280" height="110" />
+  <text class="label" x="1520" y="1298" text-anchor="middle">DBPool</text>
+  <text class="tiny" x="1520" y="1325" text-anchor="middle">pg Pool</text>
+  <text class="tiny" x="1520" y="1347" text-anchor="middle">query(sql, params)</text>
+
+  <rect class="boxGold" x="1700" y="1245" width="260" height="125" />
+  <text class="label" x="1830" y="1283" text-anchor="middle">users</text>
+  <text class="tiny" x="1830" y="1310" text-anchor="middle">id PK</text>
+  <text class="tiny" x="1830" y="1332" text-anchor="middle">email, password_hash</text>
+
+  <rect class="boxGold" x="1990" y="1245" width="300" height="125" />
+  <text class="label" x="2140" y="1283" text-anchor="middle">trip_plans</text>
+  <text class="tiny" x="2140" y="1310" text-anchor="middle">id PK, user_id FK</text>
+  <text class="tiny" x="2140" y="1332" text-anchor="middle">destination, start_date, end_date, notes</text>
+
+  <path class="line" marker-end="url(#arrow)" d="M 1110 275 L 1110 300" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 210 320" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 550 320" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 840 320" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 1150 320" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 1455 320" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 1740 320" />
+  <path class="line" marker-end="url(#arrow)" d="M 1140 275 L 2060 320" />
+
+  <path class="line" marker-end="url(#arrow)" d="M 1455 405 L 360 450" />
+  <path class="line" marker-end="url(#arrow)" d="M 2060 405 L 920 450" />
+  <path class="line" marker-end="url(#arrow)" d="M 2060 405 L 1170 450" />
+
+  <path class="line" marker-end="url(#arrow)" d="M 345 920 L 725 920" />
+  <path class="line" marker-end="url(#arrow)" d="M 725 920 L 1155 920" />
+  <path class="line" marker-end="url(#arrow)" d="M 1155 920 L 1570 920" />
+  <path class="line dashed" marker-end="url(#arrow)" d="M 1985 920 L 840 405" />
+
+  <path class="line" marker-end="url(#arrow)" d="M 390 1370 L 785 1370" />
+  <path class="line" marker-end="url(#arrow)" d="M 390 1370 L 1165 1370" />
+  <path class="line" marker-end="url(#arrow)" d="M 785 1370 L 1520 1370" />
+  <path class="line" marker-end="url(#arrow)" d="M 1165 1370 L 1520 1370" />
+  <path class="line" marker-end="url(#arrow)" d="M 1520 1370 L 1830 1365" />
+  <path class="line" marker-end="url(#arrow)" d="M 1520 1370 L 2140 1365" />
+
+  <text class="subtitle" x="80" y="1760">Tip: open this SVG in your browser or VS Code preview to copy or export it as an image.</text>
+</svg>

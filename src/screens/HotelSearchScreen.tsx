@@ -185,6 +185,7 @@ const HotelSearchScreen: React.FC<Props> = ({ route }) => {
         <TextInput
           style={styles.input}
           placeholder="City or Hotel Name (e.g. Paris, Hilton)"
+          placeholderTextColor="#6B7280"
           value={query}
           onChangeText={setQuery}
           returnKeyType="search"
@@ -246,6 +247,7 @@ const HotelSearchScreen: React.FC<Props> = ({ route }) => {
             <TextInput
               style={styles.input}
               placeholder="Check-in Date (YYYY-MM-DD)"
+              placeholderTextColor="#6B7280"
               value={checkin}
               onChangeText={value => {
                 setCheckin(value);
@@ -255,6 +257,7 @@ const HotelSearchScreen: React.FC<Props> = ({ route }) => {
             <TextInput
               style={styles.input}
               placeholder="Check-out Date (YYYY-MM-DD)"
+              placeholderTextColor="#6B7280"
               value={checkout}
               onChangeText={value => {
                 setCheckout(value);
@@ -290,7 +293,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#E0F2FE' },
   searchSection: { marginTop: 24 },
   title: { fontSize: 22, fontWeight: 'bold', marginBottom: 16 },
-  input: { backgroundColor: 'rgb(255, 255, 255)', borderRadius: 8, padding: 12, marginBottom: 10, fontSize: 16 },
+  input: { backgroundColor: 'rgb(255, 255, 255)', borderRadius: 8, padding: 12, marginBottom: 10, fontSize: 16, color: '#000' },
   button: { backgroundColor: '#00223D', borderRadius: 10, padding: 16, alignItems: 'center', marginBottom: 12 },
   buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
   message: { marginBottom: 10, fontSize: 14 },

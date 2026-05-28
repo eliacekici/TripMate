@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import pool from '../db.js';
 
 const router = express.Router();
+const BCRYPT_ROUNDS = 8;
 
 // SIGNUP 
 router.post('/signup', async (req, res) => {
@@ -23,7 +24,7 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'Email already exists' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
     const newUser = await pool.query(
       `INSERT INTO users (email, password_hash)

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { getStoredAuth } from './src/utils/auth';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import SplashScreen from './src/screens/SplashScreen';
 import OnboardingScreen_1 from './src/screens/OnboardingScreen_1';
@@ -41,7 +42,7 @@ export type RootStackParamList = {
   LoginScreen: undefined;
   DashboardMyPlansScreen: undefined;
   CreatingPlanEmptyScreen: { destination: string; tripStartDate?: string; tripEndDate?: string };
-  FlightTicketScannerScreen: undefined;
+  FlightTicketScannerScreen: { destination?: string; tripStartDate?: string; tripEndDate?: string } | undefined;
   HotelSearchScreen: { destination?: string; tripStartDate?: string; tripEndDate?: string } | undefined;
   HotelDetailsScreen: { hotel: any };
   
@@ -62,24 +63,26 @@ export default function App() {
   if (loading || !initialRoute) return null;
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboarding1" component={OnboardingScreen_1} />
-        <Stack.Screen name="Onboarding2" component={OnboardingScreen_2} />
-        <Stack.Screen name="DashboardGuides" component={DashboardGuides} />
-        <Stack.Screen name="SearchScreen" component={SearchScreen} />
-        <Stack.Screen name="CityDetailsScreen" component={CityDetailsScreen} />
-        <Stack.Screen name="LandmarkDetailsScreen" component={LandmarkDetailsScreen} />
-        <Stack.Screen name="MyPlansLoggedOutScreen" component={MyPlansLoggedOutScreen} />
-        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="DashboardMyPlansScreen" component={DashboardMyPlansScreen} />
-        <Stack.Screen name="CreatingPlanEmptyScreen" component={CreatingPlanEmptyScreen} />
-        <Stack.Screen name="FlightTicketScannerScreen" component={FlightTicketScannerScreen} />
-        <Stack.Screen name="HotelSearchScreen" component={HotelSearchScreen} />
-        <Stack.Screen name="HotelDetailsScreen" component={HotelDetailsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={initialRoute}>
+          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Onboarding1" component={OnboardingScreen_1} />
+          <Stack.Screen name="Onboarding2" component={OnboardingScreen_2} />
+          <Stack.Screen name="DashboardGuides" component={DashboardGuides} />
+          <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="CityDetailsScreen" component={CityDetailsScreen} />
+          <Stack.Screen name="LandmarkDetailsScreen" component={LandmarkDetailsScreen} />
+          <Stack.Screen name="MyPlansLoggedOutScreen" component={MyPlansLoggedOutScreen} />
+          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="DashboardMyPlansScreen" component={DashboardMyPlansScreen} />
+          <Stack.Screen name="CreatingPlanEmptyScreen" component={CreatingPlanEmptyScreen} />
+          <Stack.Screen name="FlightTicketScannerScreen" component={FlightTicketScannerScreen} />
+          <Stack.Screen name="HotelSearchScreen" component={HotelSearchScreen} />
+          <Stack.Screen name="HotelDetailsScreen" component={HotelDetailsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

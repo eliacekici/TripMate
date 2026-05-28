@@ -103,7 +103,7 @@ const CityDetailsScreen = ({ route }: Props) => {
     }
      
     const renderHeader = () => (
-        <>
+    <View>
             <Image
                 source={
                     cityPhotoUrl 
@@ -133,7 +133,7 @@ const CityDetailsScreen = ({ route }: Props) => {
 
                 {apiError && <Text style={styles.errorText}>{apiError}</Text>}
             </View>
-        </>
+    </View>
     );
 
     // --- Place Item Renderer ---

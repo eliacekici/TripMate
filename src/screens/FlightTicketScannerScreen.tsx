@@ -2,12 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator, Alert, PermissionsAndroid, Platform } from 'react-native';
 import { launchCamera, launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
 import TextRecognition from 'react-native-text-recognition';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../../App';
 import styles from './FlightTicketScannerScreen.styles';
+import { saveTicketPlan } from '../services/BookingApi';
+
+type FlightTicketScannerRouteProp = RouteProp<RootStackParamList, 'FlightTicketScannerScreen'>;
 
 const FlightTicketScannerScreen = () => {
+  const route = useRoute<FlightTicketScannerRouteProp>();
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [ocrText, setOcrText] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isSavingTicket, setIsSavingTicket] = useState(false);
   const [parsedInfo, setParsedInfo] = useState<{
     passengerName?: string;
     airline?: string;
@@ -70,61 +77,172 @@ const FlightTicketScannerScreen = () => {
 
   // Helper function to parse ticket info from OCR lines
   function parseTicketInfo(lines: string[]) {
-    let passengerName, airline, timeOfTravel, gate, departureTime, seat;
-    // Try to find each field using regex or keyword search
-    for (let line of lines) {
-      // Passenger Name (look for NAME or PASSENGER)
-      if (!passengerName && /name|passenger/i.test(line)) {
-        const match = line.match(/(?:name|passenger)\s*:?\s*(.+)/i);
-        if (match) passengerName = match[1].trim();
+    const cleaned = lines.map(line => line.trim()).filter(Boolean);
+    let passengerName: string | undefined;
+    let airline: string | undefined;
+    let timeOfTravel: string | undefined;
+    let gate: string | undefined;
+    let departureTime: string | undefined;
+    let seat: string | undefined;
+
+    const isValidSeat = (value: string) => /^(?:[0-9]{1,2}[A-Z]|[A-Z][0-9]{1,2}|[A-Z0-9]{2,4})$/.test(value);
+    const isNameLike = (value: string) => /^[A-Za-zÀ-ÖØ-öø-ÿ]+\s+[A-Za-zÀ-ÖØ-öø-ÿ]+(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ]+)?$/.test(value.trim());
+    const isLabelLine = (value: string) => /^(boarding|boarding passes|passenger|passenger name|reference|seat|gate|departure|depart|arrival|flight|airline|time|non-priority|small bag only|add to wallet|ryanair|easyjet|klm|air france|british airways)$/i.test(value.trim());
+
+    const getTime = (value: string) => {
+      const match = value.match(/([01]?\d|2[0-3]):[0-5]\d/);
+      return match?.[1];
+    };
+
+    const getSeat = (value: string) => {
+      const match = value.match(/\b([0-9]{1,2}[A-Z]|[A-Z][0-9]{1,2}|[A-Z0-9]{2,4})\b/);
+      return match?.[1];
+    };
+
+    const findNearbyName = (index: number) => {
+      for (let offset = 1; offset <= 3; offset += 1) {
+        const candidate = cleaned[index + offset];
+        if (!candidate) break;
+        if (isNameLike(candidate) && !isLabelLine(candidate)) return candidate.trim();
       }
-      // Airline (look for AIRLINE or common airline names)
-      if (!airline && /airline|airways|airlines|turkish|pegasus|delta|united|lufthansa|qatar|emirates|american/i.test(line)) {
-        const match = line.match(/(?:airline)\s*:?\s*(.+)/i);
-        airline = match ? match[1].trim() : line.trim();
+      for (let offset = 1; offset <= 3; offset += 1) {
+        const candidate = cleaned[index - offset];
+        if (!candidate) break;
+        if (isNameLike(candidate) && !isLabelLine(candidate)) return candidate.trim();
       }
-      // Time of Travel (look for TIME or DEPARTURE)
-      if (!timeOfTravel && /time of travel|travel time/i.test(line)) {
-        const match = line.match(/(?:time of travel|travel time)\s*:?\s*(.+)/i);
-        if (match) timeOfTravel = match[1].trim();
+      return undefined;
+    };
+
+    for (let i = 0; i < cleaned.length; i++) {
+      const line = cleaned[i];
+      const lower = line.toLowerCase();
+      const nextLine = cleaned[i + 1] || '';
+
+      if (!passengerName && /^(passenger name|passenger|name)\b/i.test(line)) {
+        const match = line.match(/^(?:passenger name|passenger|name)\s*:?\s*(.+)$/i);
+        if (match?.[1]?.trim() && isNameLike(match[1].trim())) {
+          passengerName = match[1].trim();
+        } else {
+          passengerName = findNearbyName(i);
+        }
       }
-      // Gate (look for GATE)
-      if (!gate && /gate/i.test(line)) {
-        const match = line.match(/gate\s*:?\s*([A-Z0-9]+)/i);
-        if (match) gate = match[1].trim();
+
+      if (!airline && /^(ryanair|turkish|pegasus|delta|united|lufthansa|qatar|emirates|american|easyjet|air france|klm|british airways)$/i.test(line.trim())) {
+        airline = line.trim();
       }
-      // Departure Time (look for DEPARTURE or time format)
-      if (!departureTime && /departure/i.test(line)) {
-        const match = line.match(/departure\s*:?\s*([0-9]{1,2}:[0-9]{2})/i);
-        if (match) departureTime = match[1].trim();
+
+      if (!airline && /(?:airline|airways|airlines)\b/i.test(line)) {
+        const match = line.match(/^(?:airline|airways|airlines)\s*:?\s*(.+)$/i);
+        if (match?.[1]?.trim()) airline = match[1].trim();
       }
-      // Seat (look for SEAT)
-      if (!seat && /seat/i.test(line)) {
-        const match = line.match(/seat\s*:?\s*([A-Z0-9]+)/i);
-        if (match) seat = match[1].trim();
+
+      if (!gate && /\bgate\b/i.test(line) && !/gate closes/i.test(lower)) {
+        const match = line.match(/gate\s*:?\s*([A-Z0-9-]+)/i);
+        if (match?.[1]) {
+          gate = match[1].trim();
+        } else if (getSeat(nextLine) && !/closes/i.test(nextLine.toLowerCase())) {
+          gate = nextLine.trim();
+        }
+      }
+
+      if (!departureTime && /\b(departure|depart|dep)\b/i.test(lower)) {
+        const match = line.match(/(?:departure|depart|dep)\s*:?\s*([0-9]{1,2}:[0-9]{2})/i);
+        if (match?.[1]) {
+          departureTime = match[1].trim();
+        }
+      }
+
+      if (!seat && /\bseat\b/i.test(lower)) {
+        const match = line.match(/seat\s*:?\s*([A-Z0-9]{2,4})/i);
+        if (match?.[1]) {
+          seat = match[1].trim();
+        } else if (getSeat(nextLine)) {
+          seat = getSeat(nextLine);
+        }
+      }
+
+      if (!timeOfTravel && /time of travel|travel time|time/i.test(lower)) {
+        const match = line.match(/(?:time of travel|travel time|time)\s*:?\s*(.+)/i);
+        if (match?.[1]) {
+          timeOfTravel = match[1].trim();
+        }
       }
     }
-    // Fallbacks: try to find time/seat/gate if not found
+
+    if (!passengerName) {
+      for (let i = 0; i < cleaned.length; i++) {
+        const line = cleaned[i];
+        if (isNameLike(line) && !isLabelLine(line) && !/^[A-Z]{2,}$/.test(line)) {
+          passengerName = line.trim();
+          break;
+        }
+      }
+    }
+
     if (!departureTime) {
-      for (let line of lines) {
+      for (const line of cleaned) {
         const match = line.match(/([0-9]{1,2}:[0-9]{2})/);
-        if (match) { departureTime = match[1]; break; }
+        if (match) {
+          departureTime = match[1];
+          break;
+        }
       }
     }
+
     if (!seat) {
-      for (let line of lines) {
+      for (const line of cleaned) {
         const match = line.match(/\b([0-9]{1,2}[A-Z])\b/);
-        if (match) { seat = match[1]; break; }
+        if (match) {
+          seat = match[1];
+          break;
+        }
       }
     }
+
     if (!gate) {
-      for (let line of lines) {
-        const match = line.match(/\b([A-Z][0-9]{1,2})\b/);
-        if (match) { gate = match[1]; break; }
+      for (const line of cleaned) {
+        if (/\bgate\b/i.test(line) && !/gate closes/i.test(line)) {
+          const match = line.match(/gate\s*:?\s*([A-Z0-9-]+)/i);
+          if (match?.[1]) {
+            gate = match[1].trim();
+            break;
+          }
+        }
       }
     }
+
     return { passengerName, airline, timeOfTravel, gate, departureTime, seat };
   }
+
+  const handleSaveTicket = async () => {
+    if (ocrText.length === 0) {
+      Alert.alert('No ticket data', 'Please scan or pick a ticket image first.');
+      return;
+    }
+
+    setIsSavingTicket(true);
+    try {
+      await saveTicketPlan({
+        ticket: {
+          passengerName: parsedInfo.passengerName || '',
+          airline: parsedInfo.airline || '',
+          timeOfTravel: parsedInfo.timeOfTravel || '',
+          gate: parsedInfo.gate || '',
+          departureTime: parsedInfo.departureTime || '',
+          seat: parsedInfo.seat || '',
+          rawText: ocrText.join('\n'),
+        },
+        destination: route.params?.destination,
+        tripStartDate: route.params?.tripStartDate,
+        tripEndDate: route.params?.tripEndDate,
+      });
+      Alert.alert('Saved', 'Ticket information saved successfully.');
+    } catch (error) {
+      Alert.alert('Error', 'Unable to save ticket. Please try again.');
+    } finally {
+      setIsSavingTicket(false);
+    }
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -165,6 +283,16 @@ const FlightTicketScannerScreen = () => {
           {ocrText.map((line, idx) => (
             <Text key={idx} style={styles.ocrText}>{line}</Text>
           ))}
+
+          <TouchableOpacity
+            style={[styles.customButton, { marginTop: 14 }]}
+            onPress={handleSaveTicket}
+            disabled={isSavingTicket}
+          >
+            <Text style={styles.customButtonText}>
+              {isSavingTicket ? 'Saving Ticket...' : 'Save Ticket'}
+            </Text>
+          </TouchableOpacity>
         </View>
       )}
     </ScrollView>

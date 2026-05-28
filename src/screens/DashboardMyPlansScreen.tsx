@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import AppFooter from './AppFooter'; 
 import { RootStackParamList } from '../../App';
+import { apiFetch } from '../services/apiClient';
 
 import { styles, gridStyles, COLORS } from './DashboardMyPlans.styles';
 
@@ -163,7 +164,7 @@ const DashboardMyPlansScreen = () => {
             setUserId(id);
             if (id) {
                 try {
-                    const res = await fetch(`http://10.0.2.2:5000/api/trip-plans/${id}`);
+                    const res = await apiFetch(`/api/trip-plans/${id}`);
                     const data = await res.json();
                     if (data.tripPlans && data.tripPlans.length > 0) {
                         // Use the most recent trip (last in array)
@@ -334,7 +335,7 @@ const DashboardMyPlansScreen = () => {
 
         try {
         // Send trip to backend
-            const response = await fetch('http://10.0.2.2:5000/api/trip-plans', {
+            const response = await apiFetch('/api/trip-plans', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

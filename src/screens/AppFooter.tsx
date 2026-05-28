@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRoute } from '@react-navigation/native';
 import footerStyles from './AppFooter.styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'; 
 import { RootStackParamList } from '../../App';
 
 export type ScreenName = keyof RootStackParamList; 
+type FooterTabName = 'Home' | 'My Plans' | 'Profile';
 
 interface FooterProps {     
     navigation: NativeStackNavigationProp<RootStackParamList>;     
-    activeScreen: ScreenName; 
+    activeScreen?: ScreenName; 
 } 
 // --- END TYPE DEFINITIONS --- 
 
@@ -18,8 +20,33 @@ const PRIMARY_ACTIVE_COLOR = '#0C1559';
 const INACTIVE_COLOR = '#000000'; 
 const FOOTER_BG_COLOR = '#C3E2F1'; 
 
+const HOME_ROUTES: ScreenName[] = [
+    'DashboardGuides',
+    'SearchScreen',
+    'CityDetailsScreen',
+    'LandmarkDetailsScreen',
+];
+
+const MY_PLANS_ROUTES: ScreenName[] = [
+    'MyPlansLoggedOutScreen',
+    'DashboardMyPlansScreen',
+    'CreatingPlanEmptyScreen',
+    'FlightTicketScannerScreen',
+    'HotelSearchScreen',
+    'HotelDetailsScreen',
+];
+
+const getActiveTab = (routeName: string): FooterTabName | null => {
+    if (HOME_ROUTES.includes(routeName as ScreenName)) return 'Home';
+    if (MY_PLANS_ROUTES.includes(routeName as ScreenName)) return 'My Plans';
+    if (routeName === 'ProfileScreen') return 'Profile';
+    return null;
+};
+
 const AppFooter: React.FC<FooterProps> = ({ navigation, activeScreen }) => { 
     const insets = useSafeAreaInsets();
+    const route = useRoute();
+    const activeTab = getActiveTab(activeScreen ?? route.name);
     // Define the tabs, their screen name, and asset location once 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     useEffect(() => {
@@ -59,7 +86,7 @@ const AppFooter: React.FC<FooterProps> = ({ navigation, activeScreen }) => {
         <View style={[footerStyles.footer, { paddingBottom: Math.max(insets.bottom, 8) }]}>             
             {tabs.map((tab) => {                 
                 // Determine if the current tab matches the screen being viewed                 
-                const isActive = tab.screen === activeScreen;                 
+                const isActive = tab.name === activeTab;                 
                 const textColor = isActive ? PRIMARY_ACTIVE_COLOR : INACTIVE_COLOR;                 
                 const iconOpacity = isActive ? 1.0 : 0.4;                 
 

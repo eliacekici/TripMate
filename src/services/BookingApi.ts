@@ -7,6 +7,7 @@ const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 const USER_AGENT = 'TripMateApp/1.0';
 
 const SAVED_HOTELS_KEY = 'bapi_saved_hotels';
+const SAVED_TICKETS_KEY = 'bapi_saved_tickets';
 const DEST_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const HOTEL_CACHE_TTL_MS = 12 * 60 * 60 * 1000;
 const AS_DEST_PREFIX = 'osm_dest_';
@@ -35,6 +36,13 @@ interface SaveHotelPlanParams {
   hotel: any;
   checkin: string;
   checkout: string;
+}
+
+interface SaveTicketPlanParams {
+  ticket: any;
+  destination?: string;
+  tripStartDate?: string;
+  tripEndDate?: string;
 }
 
 interface CacheEntry<T> {
@@ -146,6 +154,52 @@ export const getSavedHotelPlans = async (): Promise<any[]> => {
     return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
+  }
+};
+
+export const saveTicketPlan = async ({
+  ticket,
+  destination,
+  tripStartDate,
+  tripEndDate,
+}: SaveTicketPlanParams): Promise<void> => {
+  const existingRaw = await AsyncStorage.getItem(SAVED_TICKETS_KEY);
+  const existing = existingRaw ? JSON.parse(existingRaw) : [];
+
+  const next = [
+    {
+      id: `ticket-${Date.now()}`,
+      createdAt: Date.now(),
+      destination,
+      tripStartDate,
+      tripEndDate,
+      ...ticket,
+    },
+    ...existing,
+  ];
+
+  await AsyncStorage.setItem(SAVED_TICKETS_KEY, JSON.stringify(next));
+};
+
+export const getSavedTicketPlans = async (): Promise<any[]> => {
+  try {
+    const raw = await AsyncStorage.getItem(SAVED_TICKETS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+export const deleteSavedTicketPlan = async (ticketId: string): Promise<void> => {
+  try {
+    const raw = await AsyncStorage.getItem(SAVED_TICKETS_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    const next = Array.isArray(parsed) ? parsed.filter((ticket: any) => ticket.id !== ticketId) : [];
+    await AsyncStorage.setItem(SAVED_TICKETS_KEY, JSON.stringify(next));
+  } catch {
+    // ignore errors silently
   }
 };
 
