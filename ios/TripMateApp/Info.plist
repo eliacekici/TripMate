@@ -34,7 +34,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>TripMate uses your location to show transport options and estimated travel time to your selected destination.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires camera access to scan flight tickets.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -15,7 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../../App'; 
 import AppFooter from './AppFooter';
-import { deleteSavedTicketPlan, getSavedHotelPlans, getSavedTicketPlans } from '../services/BookingApi';
+import { deleteSavedTicketPlan, deleteSavedHotelPlan, deleteSavedFoodPlan, getSavedHotelPlans, getSavedTicketPlans, getSavedFoodPlans, getSavedSpotPlans, deleteSavedSpotPlan } from '../services/BookingApi';
 
 import { UNSPLASH_ACCESS_KEY} from '@env';
 
@@ -45,7 +45,12 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
   const [showCategoryFooter, setShowCategoryFooter] = useState(false);
   const [savedHotels, setSavedHotels] = useState<any[]>([]);
   const [savedTickets, setSavedTickets] = useState<any[]>([]);
+  const [savedFoods, setSavedFoods] = useState<any[]>([]);
+  const [savedSpots, setSavedSpots] = useState<any[]>([]);
   const [selectedTicketToDelete, setSelectedTicketToDelete] = useState<string | null>(null);
+  const [selectedHotelToDelete, setSelectedHotelToDelete] = useState<string | null>(null);
+  const [selectedFoodToDelete, setSelectedFoodToDelete] = useState<string | null>(null);
+  const [selectedSpotToDelete, setSelectedSpotToDelete] = useState<string | null>(null);
 
   const confirmDeleteTicket = (ticketId: string) => {
     Alert.alert(
@@ -70,6 +75,75 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
     );
   };
 
+  const confirmDeleteHotel = (hotelId: string) => {
+    Alert.alert(
+      'Delete hotel',
+      'Are you sure you want to delete this hotel?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => setSelectedHotelToDelete(null),
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteSavedHotelPlan(hotelId);
+            setSavedHotels((current) => current.filter((h) => h.id !== hotelId));
+            setSelectedHotelToDelete(null);
+          },
+        },
+      ]
+    );
+  };
+
+  const confirmDeleteFood = (foodId: string) => {
+    Alert.alert(
+      'Delete food spot',
+      'Are you sure you want to delete this saved food spot?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => setSelectedFoodToDelete(null),
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteSavedFoodPlan(foodId);
+            setSavedFoods((current) => current.filter((item) => item.id !== foodId));
+            setSelectedFoodToDelete(null);
+          },
+        },
+      ]
+    );
+  };
+
+  const confirmDeleteSpot = (spotId: string) => {
+    Alert.alert(
+      'Delete saved spot',
+      'Are you sure you want to delete this saved spot?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: () => setSelectedSpotToDelete(null),
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteSavedSpotPlan(spotId);
+            setSavedSpots((current) => current.filter((s) => s.id !== spotId));
+            setSelectedSpotToDelete(null);
+          },
+        },
+      ]
+    );
+  };
+
   const toYmd = (value?: string): string | null => {
     if (!value) return null;
     if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
@@ -86,8 +160,15 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
 
   // Compute sorted groups based on when each type was first saved
   const sortedGroups = useMemo(() => {
-    const groups: Array<{ type: 'hotels' | 'tickets'; items: any[]; title: string }> = [];
+    const groups: Array<{ type: 'hotels' | 'tickets' | 'food' | 'spots'; items: any[]; title: string }> = [];
 
+    if (savedSpots.length > 0) {
+      groups.push({ type: 'spots', items: savedSpots, title: 'Saved Spots & Attractions' });
+    }
+
+    if (savedFoods.length > 0) {
+      groups.push({ type: 'food', items: savedFoods, title: 'Saved Food & Drink' });
+    }
     if (savedHotels.length > 0) {
       groups.push({ type: 'hotels', items: savedHotels, title: 'Saved Hotels' });
     }
@@ -103,7 +184,7 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
     });
 
     return groups;
-  }, [savedHotels, savedTickets]);
+  }, [savedSpots, savedFoods, savedHotels, savedTickets]);
 
   useEffect(() => {
     // Fetch a photo from Unsplash API based on the destination
@@ -171,8 +252,40 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
         setSavedTickets(filtered);
       };
 
+      const loadSavedFoods = async () => {
+        const plans = await getSavedFoodPlans();
+
+        const filtered = plans.filter((food: any) => {
+          if (!destination) return true;
+          return (
+            String(food.destination || '')
+              .trim()
+              .toLowerCase() === destination.trim().toLowerCase()
+          );
+        });
+
+        setSavedFoods(filtered);
+      };
+
+      const loadSavedSpots = async () => {
+        const plans = await getSavedSpotPlans();
+
+        const filtered = plans.filter((spot: any) => {
+          if (!destination) return true;
+          return (
+            String(spot.destination || '')
+              .trim()
+              .toLowerCase() === destination.trim().toLowerCase()
+          );
+        });
+
+        setSavedSpots(filtered);
+      };
+
       loadSavedHotels();
       loadSavedTickets();
+      loadSavedFoods();
+      loadSavedSpots();
     }, [destination, tripStart, tripEnd])
   );
 
@@ -207,11 +320,16 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
                 <Text style={styles.savedHotelsTitle}>{group.title}</Text>
                 {group.type === 'hotels' &&
                   group.items.map((plan: any) => (
-                    <View key={plan.id} style={styles.savedHotelCard}>
+                    <TouchableOpacity
+                      key={plan.id}
+                      style={styles.savedHotelCard}
+                      onLongPress={() => setSelectedHotelToDelete(plan.id)}
+                      activeOpacity={0.8}
+                    >
                       <Text style={styles.savedHotelName}>{plan?.hotel?.hotel_name || 'Unnamed hotel'}</Text>
                       <Text style={styles.savedHotelDate}>Check-in: {plan?.checkin || 'N/A'}</Text>
                       <Text style={styles.savedHotelDate}>Check-out: {plan?.checkout || 'N/A'}</Text>
-                    </View>
+                    </TouchableOpacity>
                   ))}
                 {group.type === 'tickets' &&
                   group.items.map((ticket: any) => (
@@ -236,23 +354,70 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
                       ) : null}
                     </TouchableOpacity>
                   ))}
+                {group.type === 'spots' &&
+                  group.items.map((place: any) => (
+                    <TouchableOpacity
+                      key={place.id}
+                      style={styles.savedHotelCard}
+                      onLongPress={() => setSelectedSpotToDelete(place.id)}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.savedHotelName}>{place.name || 'Saved Spot'}</Text>
+                      {place.address ? (
+                        <Text style={styles.savedHotelDate}>{place.address}</Text>
+                      ) : null}
+                      {place.city ? (
+                        <Text style={styles.savedHotelDate}>{place.city}</Text>
+                      ) : null}
+                    </TouchableOpacity>
+                  ))}
+
+                {group.type === 'food' &&
+                  group.items.map((place: any) => (
+                    <TouchableOpacity
+                      key={place.id}
+                      style={styles.savedHotelCard}
+                      onLongPress={() => setSelectedFoodToDelete(place.id)}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.savedHotelName}>{place.name || 'Saved Food Spot'}</Text>
+                      {place.address ? (
+                        <Text style={styles.savedHotelDate}>{place.address}</Text>
+                      ) : null}
+                      {place.city ? (
+                        <Text style={styles.savedHotelDate}>{place.city}</Text>
+                      ) : null}
+                    </TouchableOpacity>
+                  ))}
               </View>
             ))}
           </ScrollView>
         </View>
       )}
 
-      {selectedTicketToDelete && (
+      {(selectedTicketToDelete || selectedHotelToDelete || selectedFoodToDelete || selectedSpotToDelete) && (
         <View style={styles.deleteBar}>
           <TouchableOpacity
             style={styles.deleteButton}
-            onPress={() => confirmDeleteTicket(selectedTicketToDelete)}
+            onPress={() => {
+              if (selectedTicketToDelete) confirmDeleteTicket(selectedTicketToDelete);
+              else if (selectedHotelToDelete) confirmDeleteHotel(selectedHotelToDelete);
+              else if (selectedFoodToDelete) confirmDeleteFood(selectedFoodToDelete);
+              else if (selectedSpotToDelete) confirmDeleteSpot(selectedSpotToDelete);
+            }}
           >
-            <Text style={styles.deleteButtonText}>Delete Ticket</Text>
+            <Text style={styles.deleteButtonText}>
+              {selectedTicketToDelete ? 'Delete Ticket' : selectedHotelToDelete ? 'Delete Hotel' : selectedFoodToDelete ? 'Delete Food' : 'Delete Spot'}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.deleteCancelButton}
-            onPress={() => setSelectedTicketToDelete(null)}
+            onPress={() => {
+              setSelectedTicketToDelete(null);
+              setSelectedHotelToDelete(null);
+              setSelectedFoodToDelete(null);
+              setSelectedSpotToDelete(null);
+            }}
           >
             <Text style={styles.deleteCancelButtonText}>Cancel</Text>
           </TouchableOpacity>
@@ -295,9 +460,9 @@ const CreatingPlanEmptyScreen: React.FC<CreatingPlanEmptyScreenProps> = ({
             image={require('../assets/images/hotel.png')}
             onPress={() => navigation.navigate('HotelSearchScreen', { destination, tripStartDate, tripEndDate })}
           />
-          <CategoryIcon label="Food" image={require('../assets/images/food.png')} onPress={() => {}} />
-          <CategoryIcon label="Spots" image={require('../assets/images/spots.png')} onPress={() => {}} />
-          <CategoryIcon label="Transport" image={require('../assets/images/transportation.png')} onPress={() => {}} />
+          <CategoryIcon label="Food" image={require('../assets/images/food.png')} onPress={() => navigation.navigate('FoodSearchScreen', { destination, tripStartDate, tripEndDate })} />
+          <CategoryIcon label="Spots" image={require('../assets/images/spots.png')} onPress={() => navigation.navigate('SpotsSearchScreen', { destination, tripStartDate, tripEndDate })} />
+          <CategoryIcon label="Transport" image={require('../assets/images/transportation.png')} onPress={() => navigation.navigate('TransportScreen', { destination, tripStartDate, tripEndDate })} />
         </View>
       )}
 

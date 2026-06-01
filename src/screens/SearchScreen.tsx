@@ -52,26 +52,42 @@ const SearchScreen = () => {
 
   return (
     <View style={styles.fullContainer}>
-
-      {/* Main Content Area */}
       <View style={styles.contentContainer}>
         <View style={styles.header}>
-            <View style={styles.searchBar}>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Where are you going?"
-                    placeholderTextColor={styles.placeholder.color}
-                    value={searchText}
-                    onChangeText={setSearchText}
-                    onSubmitEditing={handleSearchSubmit}
-                />
-                {/* ...existing code for the rest of the component... */}
-            </View>
-            {/* ...existing code for the rest of the component... */}
+          <View style={styles.searchBar}>
+            <TextInput
+              style={styles.input}
+              placeholder="Where are you going?"
+              placeholderTextColor={styles.placeholder.color}
+              value={searchText}
+              onChangeText={setSearchText}
+              onSubmitEditing={handleSearchSubmit}
+              returnKeyType="search"
+            />
+          </View>
         </View>
-        {/* ...existing code for the rest of the component... */}
+
+        <View style={styles.suggestionsContainer}>
+          <FlatList
+            data={suggestions}
+            keyExtractor={(item) => item.id}
+            keyboardShouldPersistTaps="handled"
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.suggestionItem}
+                onPress={() => handleCityPress(item.name)}
+              >
+                <Image
+                  source={require('../assets/images/location_icon.png')}
+                  style={styles.suggestionIcon}
+                />
+                <Text style={styles.suggestionText}>{item.name}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
       </View>
-      {/* ...existing code for the rest of the component... */}
+      <AppFooter navigation={navigation} />
     </View>
   );
 };

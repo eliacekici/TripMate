@@ -33,6 +33,7 @@ const MY_PLANS_ROUTES: ScreenName[] = [
     'CreatingPlanEmptyScreen',
     'FlightTicketScannerScreen',
     'HotelSearchScreen',
+    'TransportScreen',
     'HotelDetailsScreen',
 ];
 
